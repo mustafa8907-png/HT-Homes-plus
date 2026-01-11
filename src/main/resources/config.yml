@@ -1,24 +1,21 @@
-language: "en"
-
-groups:
-  default: 1
-  vip: 3
-  pro: 5
-  legend: 10
-  staff: 25
+# HT-Homes+ Configuration
+language: en
 
 gui:
-  rows: 6
-  materials:
-    filled: "GREEN_BED"
-    empty: "RED_BED"
-  sounds:
-    open: "BLOCK_CHEST_OPEN"
-    click_set: "ENTITY_EXPERIENCE_ORB_PICKUP"
-    click_teleport: "ENTITY_ENDERMAN_TELEPORT"
-    click_delete: "ENTITY_ITEM_BREAK"
-    error: "BLOCK_ANVIL_LAND"
+  title: "&8Evlerim &7(Sayfa {page})"
+  rows: 3
+  fill-item: "GRAY_STAINED_GLASS_PANE"
+  # Menüdeki ev ikonunun türü (RED_BED, BLUE_BED, CHEST vb.)
+  home-item: "RED_BED" 
+  next-page-item: "ARROW"
+  prev-page-item: "ARROW"
 
-homes:
-  name-regex: "^[a-zA-Z0-9_]{1,16}$"
-  teleport-delay: 3
+teleport:
+  use-action-bar: true
+  delay: 3
+
+# Oyuncu gruplarına göre ev limitleri (permission: homegui.group.vip)
+groups:
+  default: 3
+  vip: 5
+  mvp: 10
