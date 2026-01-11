@@ -1,7 +1,9 @@
 package com.hthomes.managers;
 
 import com.hthomes.HTHomes;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -45,25 +47,51 @@ public class HomeManager {
         saveHomes();
     }
 
-    public Map<String, Location> getHomes(Player p) { return cache.getOrDefault(p.getUniqueId(), new HashMap<>()); }
+    public Map<String, Location> getHomes(Player p) {
+        return cache.getOrDefault(p.getUniqueId(), new HashMap<>());
+    }
 
     private void loadHomes() {
         file = new File(plugin.getDataFolder(), "data/homes.yml");
         if (!file.exists()) { file.getParentFile().mkdirs(); try { file.createNewFile(); } catch (IOException ignored) {} }
         data = YamlConfiguration.loadConfiguration(file);
-        if (data.contains("homes")) {
-            for (String u : data.getConfigurationSection("homes").getKeys(false)) {
-                Map<String, Location> h = new HashMap<>();
-                ConfigurationSection s = data.getConfigurationSection("homes." + u);
-                for (String k : s.getKeys(false)) h.put(k, s.getLocation(k));
-                cache.put(UUID.fromString(u), h);
+        
+        ConfigurationSection homesSec = data.getConfigurationSection("homes");
+        if (homesSec != null) {
+            for (String uStr : homesSec.getKeys(false)) {
+                UUID uuid = UUID.fromString(uStr);
+                Map<String, Location> userHomes = new HashMap<>();
+                ConfigurationSection userSec = homesSec.getConfigurationSection(uStr);
+                for (String hName : userSec.getKeys(false)) {
+                    // Manuel lokasyon yükleme (v1.13+ uyumluluğu için en güvenli yol)
+                    World w = Bukkit.getWorld(userSec.getString(hName + ".world"));
+                    if (w != null) {
+                        double x = userSec.getDouble(hName + ".x");
+                        double y = userSec.getDouble(hName + ".y");
+                        double z = userSec.getDouble(hName + ".z");
+                        float yaw = (float) userSec.getDouble(hName + ".yaw");
+                        float pitch = (float) userSec.getDouble(hName + ".pitch");
+                        userHomes.put(hName, new Location(w, x, y, z, yaw, pitch));
+                    }
+                }
+                cache.put(uuid, userHomes);
             }
         }
     }
 
     public void saveHomes() {
         data.set("homes", null);
-        cache.forEach((u, m) -> m.forEach((n, l) -> data.set("homes." + u + "." + n, l)));
+        cache.forEach((uuid, map) -> {
+            map.forEach((name, loc) -> {
+                String path = "homes." + uuid.toString() + "." + name;
+                data.set(path + ".world", loc.getWorld().getName());
+                data.set(path + ".x", loc.getX());
+                data.set(path + ".y", loc.getY());
+                data.set(path + ".z", loc.getZ());
+                data.set(path + ".yaw", loc.getYaw());
+                data.set(path + ".pitch", loc.getPitch());
+            });
+        });
         try { data.save(file); } catch (IOException ignored) {}
     }
-              }
+    }
