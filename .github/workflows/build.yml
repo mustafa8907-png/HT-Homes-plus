@@ -7,12 +7,12 @@ jobs:
     
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v4 # v3'ten v4'e yükseltildi
+      uses: actions/checkout@v4
 
-    - name: Set up JDK 8
-      uses: actions/setup-java@v4 # v3'ten v4'e yükseltildi
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
       with:
-        java-version: '8'
+        java-version: '17' # Java 8'den 17'ye yükseltildi
         distribution: 'temurin'
         cache: 'maven'
 
@@ -20,7 +20,7 @@ jobs:
       run: mvn clean package
 
     - name: Upload HT-Homes Jar
-      uses: actions/upload-artifact@v4 # İŞTE KRİTİK NOKTA BURASI: v4 yaptık
+      uses: actions/upload-artifact@v4
       with:
         name: HT-Homes-Plugin
         path: target/HT-Homes.jar
