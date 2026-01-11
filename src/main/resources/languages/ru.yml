@@ -1,0 +1,31 @@
+prefix: "&6[HT-Homes] &r"
+messages:
+  no-permission: "&cУ вас нет прав!"
+  reload-success: "&aКонфигурация и языки перезагружены!"
+  max-homes: "&cЛимит достигнут! Вы можете установить только {limit} домов."
+  home-set: "&aДом &e{home} &aуспешно установлен!"
+  home-deleted: "&cДом &e{home} &cудалён."
+  home-not-found: "&cДом &e{home} &cне найден."
+  invalid-name: "&cНедопустимое имя дома. Используйте только буквы и цифры."
+  teleporting: "&aТелепортация к &e{home} &aчерез &e{time} &aсекунд..."
+  teleport-success: "&aВы телепортировались к &e{home}!"
+  teleport-cancelled: "&cТелепортация отменена, вы двигались."
+  usage:
+    - "&e/home &7- Открыть GUI"
+    - "&e/home set [name] &7- Установить дом"
+    - "&e/home delete <name> &7- Удалить дом"
+  gui:
+    title: "&8HT-Homes+"
+    items:
+      empty:
+        name: "&cПустой слот"
+        lore:
+          - "&7Нажмите, чтобы установить дом"
+      filled:
+        name: "&a{home}"
+        lore:
+          - "&7Мир: &f{world}"
+          - "&7X/Y/Z: &f{x}, {y}, {z}"
+          - ""
+          - "&eЛКМ: &7Телепорт"
+          - "&cShift + ПКМ: &7Удалить"
