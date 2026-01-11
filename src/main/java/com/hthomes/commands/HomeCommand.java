@@ -11,99 +11,71 @@ import org.bukkit.entity.Player;
 
 public class HomeCommand implements CommandExecutor {
     private final HTHomes plugin;
-
-    public HomeCommand(HTHomes plugin) {
-        this.plugin = plugin;
-    }
+    public HomeCommand(HTHomes plugin) { this.plugin = plugin; }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage("Bu komutu sadece oyuncular kullanabilir.");
-            return true;
-        }
-
-        Player p = (Player) sender;
+    public boolean onCommand(CommandSender s, Command c, String l, String[] a) {
+        if (!(s instanceof Player)) return true;
+        Player p = (Player) s;
         HomeManager hm = plugin.getHomeManager();
         LanguageManager lm = plugin.getLanguageManager();
-        String cmdName = label.toLowerCase();
+        String cmd = l.toLowerCase();
 
-        // /sethome komutu
-        if (cmdName.equals("sethome")) {
-            String homeName = (args.length > 0) ? args[0] : "home" + (hm.getHomes(p).size() + 1);
-            handleSetHome(p, homeName);
+        if (cmd.equals("sethome")) {
+            String name = (a.length > 0) ? a[0] : "home" + (hm.getHomes(p).size() + 1);
+            setHome(p, name);
+            return true;
+        }
+        if (cmd.equals("delhome")) {
+            if (a.length > 0) delHome(p, a[0]);
+            else p.sendMessage(lm.getMessage("messages.usage"));
             return true;
         }
 
-        // /delhome komutu
-        if (cmdName.equals("delhome")) {
-            if (args.length > 0) {
-                handleDelHome(p, args[0]);
-            } else {
-                p.sendMessage(lm.getMessage("messages.usage"));
-            }
-            return true;
-        }
-
-        // /home komutu (Args yoksa menü açar)
-        if (args.length == 0) {
+        if (a.length == 0) {
             GUIManager.open(p, 1);
             return true;
         }
 
-        String sub = args[0].toLowerCase();
-
+        String sub = a[0].toLowerCase();
         if (sub.equals("set")) {
-            String name = (args.length > 1) ? args[1] : "home" + (hm.getHomes(p).size() + 1);
-            handleSetHome(p, name);
+            String name = (a.length > 1) ? a[1] : "home" + (hm.getHomes(p).size() + 1);
+            setHome(p, name);
         } else if (sub.equals("delete")) {
-            if (args.length > 1) {
-                handleDelHome(p, args[1]);
-            } else {
-                p.sendMessage(lm.getMessage("messages.usage"));
-            }
-        } else if (sub.equals("reload")) {
-            if (p.hasPermission("homegui.admin")) {
-                plugin.reloadConfig();
-                plugin.getLanguageManager().loadLanguage();
-                p.sendMessage(lm.getMessage("messages.reload-success"));
-            } else {
-                p.sendMessage(lm.getMessage("messages.no-permission"));
-            }
+            if (a.length > 1) delHome(p, a[1]);
+        } else if (sub.equals("reload") && p.hasPermission("homegui.admin")) {
+            plugin.reloadConfig();
+            lm.loadLanguage();
+            p.sendMessage(lm.getMessage("messages.reload-success"));
         } else {
-            // Eğer oyuncu direkt /home <isim> yazdıysa ışınla (Opsiyonel)
-             p.sendMessage(lm.getMessage("messages.usage"));
+            GUIManager.open(p, 1);
         }
         return true;
     }
 
-    private void handleSetHome(Player p, String name) {
+    private void setHome(Player p, String n) {
         HomeManager hm = plugin.getHomeManager();
-        LanguageManager lm = plugin.getLanguageManager();
         int limit = hm.getPlayerLimit(p);
-
-        if (hm.getHomes(p).size() >= limit && !hm.getHomes(p).containsKey(name)) {
-            p.sendMessage(lm.getMessage("messages.max-homes").replace("{limit}", String.valueOf(limit)));
-            GUIManager.playSound(p, "gui.sounds.error");
+        if (hm.getHomes(p).size() >= limit && !hm.getHomes(p).containsKey(n)) {
+            p.sendMessage(plugin.getLanguageManager().getMessage("messages.max-homes").replace("{limit}", String.valueOf(limit)));
             return;
         }
-
-        hm.setHome(p, name, p.getLocation());
-        p.sendMessage(lm.getMessage("messages.home-set").replace("{home}", name));
+        hm.setHome(p, n, p.getLocation());
+        p.sendMessage(plugin.getLanguageManager().getMessage("messages.home-set").replace("{home}", n));
         GUIManager.playSound(p, "gui.sounds.click_set");
+        // Evi set ettikten sonra menüyü tekrar aç ki oyuncu görsün
+        GUIManager.open(p, 1);
     }
 
-    private void handleDelHome(Player p, String name) {
+    private void delHome(Player p, String n) {
         HomeManager hm = plugin.getHomeManager();
-        LanguageManager lm = plugin.getLanguageManager();
-
-        if (hm.getHomes(p).get(name) == null) {
-            p.sendMessage(lm.getMessage("messages.home-not-found").replace("{home}", name));
+        if (hm.getHomes(p).get(n) == null) {
+            p.sendMessage(plugin.getLanguageManager().getMessage("messages.home-not-found").replace("{home}", n));
             return;
         }
-
-        hm.deleteHome(p, name);
-        p.sendMessage(lm.getMessage("messages.home-deleted").replace("{home}", name));
+        hm.deleteHome(p, n);
+        p.sendMessage(plugin.getLanguageManager().getMessage("messages.home-deleted").replace("{home}", n));
         GUIManager.playSound(p, "gui.sounds.click_delete");
+        GUIManager.open(p, 1);
     }
-        }
+            }
