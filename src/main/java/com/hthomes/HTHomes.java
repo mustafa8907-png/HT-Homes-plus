@@ -1,7 +1,5 @@
 package com.hthomes;
 
-package com.hthomes;
-
 import com.hthomes.commands.HomeCommand;
 import com.hthomes.listeners.GUIListener;
 import com.hthomes.managers.HomeManager;
@@ -16,7 +14,7 @@ public class HTHomes extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        saveDefaultConfig(); // Configi kaydet
+        saveDefaultConfig();
         
         this.languageManager = new LanguageManager(this);
         this.homeManager = new HomeManager(this);
@@ -27,15 +25,16 @@ public class HTHomes extends JavaPlugin {
         
         getServer().getPluginManager().registerEvents(new GUIListener(this), this);
         
-        getLogger().info("HT-Homes+ v2.1.0 (GUI Fix + Page System) Aktif!");
+        getLogger().info("\n§a-----------------------------\n§6HT-Homes+ §eAktif!\n§fSürüm: 2.1.0\n§a-----------------------------");
     }
 
     @Override
     public void onDisable() {
         if (homeManager != null) homeManager.saveHomes();
+        getLogger().info("§cHT-Homes+ Kapatıldı, Veriler Kaydedildi.");
     }
 
     public static HTHomes getInstance() { return instance; }
     public HomeManager getHomeManager() { return homeManager; }
     public LanguageManager getLanguageManager() { return languageManager; }
-                                                                      }
+            }
