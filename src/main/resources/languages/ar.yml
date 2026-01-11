@@ -1,0 +1,32 @@
+ar:
+  prefix: "&6[HT-Homes] &r"
+  messages:
+    no-permission: "&cليس لديك إذن!"
+    reload-success: "&aتم إعادة تحميل الإعدادات واللغات!"
+    max-homes: "&cتم الوصول إلى الحد الأقصى! يمكنك تعيين {limit} منازل فقط."
+    home-set: "&aتم تعيين المنزل &e{home} &aبنجاح!"
+    home-deleted: "&cتم حذف المنزل &e{home} &c."
+    home-not-found: "&cالمنزل &e{home} &cغير موجود."
+    invalid-name: "&cاسم المنزل غير صالح. استخدم الحروف والأرقام فقط."
+    teleporting: "&aالنقل إلى &e{home} &aفي &e{time} &اثانية..."
+    teleport-success: "&aتم النقل إلى &e{home}!"
+    teleport-cancelled: "&cتم إلغاء النقل لأنك تحركت."
+    usage:
+      - "&e/home &7- افتح الواجهة"
+      - "&e/home set [name] &7- تعيين منزل"
+      - "&e/home delete <name> &7- حذف منزل"
+    gui:
+      title: "&8HT-Homes+"
+      items:
+        empty:
+          name: "&cخانة فارغة"
+          lore:
+            - "&7اضغط لتعيين منزل هنا"
+        filled:
+          name: "&a{home}"
+          lore:
+            - "&7العالم: &f{world}"
+            - "&7X/Y/Z: &f{x}, {y}, {z}"
+            - ""
+            - "&eالزر الأيسر: &7نقل"
+            - "&cShift + الزر الأيمن: &7حذف"
