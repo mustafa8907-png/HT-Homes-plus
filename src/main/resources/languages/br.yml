@@ -1,0 +1,31 @@
+prefix: "&6[HT-Homes] &r"
+messages:
+  no-permission: "&cVocê não tem permissão!"
+  reload-success: "&aConfiguração e idiomas recarregados!"
+  max-homes: "&cLimite atingido! Você só pode definir {limit} casas."
+  home-set: "&aCasa &e{home} &adefinida com sucesso!"
+  home-deleted: "&cCasa &e{home} &cremovida."
+  home-not-found: "&cCasa &e{home} &cnão encontrada."
+  invalid-name: "&cNome de casa inválido. Use apenas letras e números."
+  teleporting: "&aTeleportando para &e{home} &aem &e{time} &asegundos..."
+  teleport-success: "&aTeleportado para &e{home}!"
+  teleport-cancelled: "&cTeleport cancelado porque você se moveu."
+  usage:
+    - "&e/home &7- Abrir GUI"
+    - "&e/home set [name] &7- Definir casa"
+    - "&e/home delete <name> &7- Remover casa"
+  gui:
+    title: "&8HT-Homes+"
+    items:
+      empty:
+        name: "&cSlot vazio"
+        lore:
+          - "&7Clique para definir uma casa aqui"
+      filled:
+        name: "&a{home}"
+        lore:
+          - "&7Mundo: &f{world}"
+          - "&7X/Y/Z: &f{x}, {y}, {z}"
+          - ""
+          - "&eClique esquerdo: &7Teleportar"
+          - "&cShift + Clique direito: &7Remover"
