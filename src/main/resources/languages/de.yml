@@ -1,0 +1,31 @@
+  prefix: "&6[HT-Homes] &r"
+  messages:
+    no-permission: "&cDu hast keine Berechtigung!"
+    reload-success: "&aKonfiguration und Sprachen neu geladen!"
+    max-homes: "&cLimit erreicht! Du kannst nur {limit} Homes setzen."
+    home-set: "&aHome &e{home} &aerfolgreich gesetzt!"
+    home-deleted: "&cHome &e{home} &cgelöscht."
+    home-not-found: "&cHome &e{home} &cnicht gefunden."
+    invalid-name: "&cUngültiger Home-Name. Verwende nur Buchstaben und Zahlen."
+    teleporting: "&aTeleportiere zu &e{home} &ain &e{time} &asekunden..."
+    teleport-success: "&aNach &e{home} &ateleportiert!"
+    teleport-cancelled: "&cTeleport abgebrochen, weil du dich bewegt hast."
+    usage:
+      - "&e/home &7- Öffne GUI"
+      - "&e/home set [name] &7- Setze ein Home"
+      - "&e/home delete <name> &7- Lösche ein Home"
+    gui:
+      title: "&8HT-Homes+"
+      items:
+        empty:
+          name: "&cLeerer Slot"
+          lore:
+            - "&7Klicke, um ein Home zu setzen"
+        filled:
+          name: "&a{home}"
+          lore:
+            - "&7Welt: &f{world}"
+            - "&7X/Y/Z: &f{x}, {y}, {z}"
+            - ""
+            - "&eLinksklick: &7Teleportieren"
+            - "&cShift + Rechtsklick: &7Löschen"
