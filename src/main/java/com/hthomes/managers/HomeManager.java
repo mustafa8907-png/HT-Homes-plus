@@ -8,6 +8,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -25,7 +26,7 @@ public class HomeManager {
 
     public int getPlayerLimit(Player p) {
         if (p.hasPermission("homegui.admin")) return 100;
-        int max = plugin.getConfig().getInt("groups.default", 1);
+        int max = plugin.getConfig().getInt("groups.default", 3);
         ConfigurationSection groups = plugin.getConfig().getConfigurationSection("groups");
         if (groups != null) {
             for (String key : groups.getKeys(false)) {
@@ -43,8 +44,10 @@ public class HomeManager {
     }
 
     public void deleteHome(Player p, String n) {
-        if (cache.containsKey(p.getUniqueId())) cache.get(p.getUniqueId()).remove(n);
-        saveHomes();
+        if (cache.containsKey(p.getUniqueId())) {
+            cache.get(p.getUniqueId()).remove(n);
+            saveHomes();
+        }
     }
 
     public Map<String, Location> getHomes(Player p) {
@@ -53,18 +56,22 @@ public class HomeManager {
 
     private void loadHomes() {
         file = new File(plugin.getDataFolder(), "data/homes.yml");
-        if (!file.exists()) { file.getParentFile().mkdirs(); try { file.createNewFile(); } catch (IOException ignored) {} }
+        if (!file.exists()) {
+            file.getParentFile().mkdirs();
+            try { file.createNewFile(); } catch (IOException ignored) {}
+        }
         data = YamlConfiguration.loadConfiguration(file);
-        
+
         ConfigurationSection homesSec = data.getConfigurationSection("homes");
         if (homesSec != null) {
             for (String uStr : homesSec.getKeys(false)) {
                 UUID uuid = UUID.fromString(uStr);
                 Map<String, Location> userHomes = new HashMap<>();
                 ConfigurationSection userSec = homesSec.getConfigurationSection(uStr);
+                
                 for (String hName : userSec.getKeys(false)) {
-                    // Manuel lokasyon yükleme (v1.13+ uyumluluğu için en güvenli yol)
-                    World w = Bukkit.getWorld(userSec.getString(hName + ".world"));
+                    String wName = userSec.getString(hName + ".world");
+                    World w = Bukkit.getWorld(wName);
                     if (w != null) {
                         double x = userSec.getDouble(hName + ".x");
                         double y = userSec.getDouble(hName + ".y");
@@ -81,17 +88,18 @@ public class HomeManager {
 
     public void saveHomes() {
         data.set("homes", null);
-        cache.forEach((uuid, map) -> {
-            map.forEach((name, loc) -> {
-                String path = "homes." + uuid.toString() + "." + name;
+        for (Map.Entry<UUID, Map<String, Location>> entry : cache.entrySet()) {
+            for (Map.Entry<String, Location> home : entry.getValue().entrySet()) {
+                String path = "homes." + entry.getKey().toString() + "." + home.getKey();
+                Location loc = home.getValue();
                 data.set(path + ".world", loc.getWorld().getName());
                 data.set(path + ".x", loc.getX());
                 data.set(path + ".y", loc.getY());
                 data.set(path + ".z", loc.getZ());
                 data.set(path + ".yaw", loc.getYaw());
                 data.set(path + ".pitch", loc.getPitch());
-            });
-        });
+            }
+        }
         try { data.save(file); } catch (IOException ignored) {}
     }
-    }
+        }
