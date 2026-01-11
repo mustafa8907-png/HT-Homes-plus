@@ -1,0 +1,31 @@
+prefix: "&6[HT-Homes] &r"
+messages:
+  no-permission: "&cVous n'avez pas la permission !"
+  reload-success: "&aConfiguration et langues rechargées !"
+  max-homes: "&cLimite atteinte ! Vous pouvez définir seulement {limit} maisons."
+  home-set: "&aMaison &e{home} &adéfinie avec succès !"
+  home-deleted: "&cMaison &e{home} &csupprimée."
+  home-not-found: "&cMaison &e{home} &cintrouvable."
+  invalid-name: "&cNom de maison invalide. Utilisez seulement des lettres et des chiffres."
+  teleporting: "&aTéléportation vers &e{home} &adans &e{time} &asecondes..."
+  teleport-success: "&aTéléporté vers &e{home} !"
+  teleport-cancelled: "&cTéléportation annulée car vous avez bougé."
+  usage:
+    - "&e/home &7- Ouvrir le GUI"
+    - "&e/home set [name] &7- Définir une maison"
+    - "&e/home delete <name> &7- Supprimer une maison"
+  gui:
+    title: "&8HT-Homes+"
+    items:
+      empty:
+        name: "&cEmplacement vide"
+        lore:
+          - "&7Cliquez pour définir une maison ici"
+      filled:
+        name: "&a{home}"
+        lore:
+          - "&7Monde : &f{world}"
+          - "&7X/Y/Z : &f{x}, {y}, {z}"
+          - ""
+          - "&eClic gauche : &7Téléporter"
+          - "&cShift + Clic droit : &7Supprimer"
