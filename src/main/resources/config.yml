@@ -1,0 +1,24 @@
+language: "en"
+
+groups:
+  default: 1
+  vip: 3
+  pro: 5
+  legend: 10
+  staff: 25
+
+gui:
+  rows: 6
+  materials:
+    filled: "GREEN_BED"
+    empty: "RED_BED"
+  sounds:
+    open: "BLOCK_CHEST_OPEN"
+    click_set: "ENTITY_EXPERIENCE_ORB_PICKUP"
+    click_teleport: "ENTITY_ENDERMAN_TELEPORT"
+    click_delete: "ENTITY_ITEM_BREAK"
+    error: "BLOCK_ANVIL_LAND"
+
+homes:
+  name-regex: "^[a-zA-Z0-9_]{1,16}$"
+  teleport-delay: 3
