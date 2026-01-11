@@ -11,7 +11,9 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class HomeManager {
     private final HTHomes plugin;
@@ -71,14 +73,16 @@ public class HomeManager {
                 
                 for (String hName : userSec.getKeys(false)) {
                     String wName = userSec.getString(hName + ".world");
-                    World w = Bukkit.getWorld(wName);
-                    if (w != null) {
-                        double x = userSec.getDouble(hName + ".x");
-                        double y = userSec.getDouble(hName + ".y");
-                        double z = userSec.getDouble(hName + ".z");
-                        float yaw = (float) userSec.getDouble(hName + ".yaw");
-                        float pitch = (float) userSec.getDouble(hName + ".pitch");
-                        userHomes.put(hName, new Location(w, x, y, z, yaw, pitch));
+                    if (wName != null) {
+                        World w = Bukkit.getWorld(wName);
+                        if (w != null) {
+                            double x = userSec.getDouble(hName + ".x");
+                            double y = userSec.getDouble(hName + ".y");
+                            double z = userSec.getDouble(hName + ".z");
+                            float yaw = (float) userSec.getDouble(hName + ".yaw");
+                            float pitch = (float) userSec.getDouble(hName + ".pitch");
+                            userHomes.put(hName, new Location(w, x, y, z, yaw, pitch));
+                        }
                     }
                 }
                 cache.put(uuid, userHomes);
@@ -102,4 +106,4 @@ public class HomeManager {
         }
         try { data.save(file); } catch (IOException ignored) {}
     }
-        }
+    }
