@@ -4,6 +4,7 @@ import com.hthomes.HTHomes;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+
 import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,4 +43,4 @@ public class LanguageManager {
                 .map(s -> ChatColor.translateAlternateColorCodes('&', s))
                 .collect(Collectors.toList());
     }
-}
+    }
