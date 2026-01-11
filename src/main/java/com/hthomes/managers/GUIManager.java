@@ -18,47 +18,59 @@ public class GUIManager {
     public static void open(Player p, int page) {
         HTHomes plugin = HTHomes.getInstance();
         
-        // Evlerin listesini al
         List<String> homeNames = new ArrayList<>(plugin.getHomeManager().getHomes(p).keySet());
         Collections.sort(homeNames);
 
-        // GUI Ayarları
-        int rows = 3; 
-        Inventory inv = Bukkit.createInventory(null, rows * 9, 
-                plugin.getLanguageManager().getRawString("gui.title").replace("{page}", String.valueOf(page)));
+        String title = plugin.getLanguageManager().getRawString("gui.title").replace("{page}", String.valueOf(page));
+        Inventory inv = Bukkit.createInventory(null, 27, title);
 
-        // Kenarlıkları Camla Doldur
-        String fillMatName = plugin.getConfig().getString("gui.fill-item", "GRAY_STAINED_GLASS_PANE");
-        ItemStack filler = createItem(Material.matchMaterial(fillMatName), " ");
+        // 1. Kenarlıkları Doldur
+        String fillStr = plugin.getConfig().getString("gui.fill-item", "GRAY_STAINED_GLASS_PANE");
+        Material fillMat = Material.matchMaterial(fillStr);
+        if (fillMat == null) fillMat = Material.GRAY_STAINED_GLASS_PANE;
+        ItemStack filler = createItem(fillMat, " ");
         
-        for (int i = 0; i < 9; i++) inv.setItem(i, filler); // Üst sıra
-        for (int i = 18; i < 27; i++) inv.setItem(i, filler); // Alt sıra
+        for (int i = 0; i < 9; i++) inv.setItem(i, filler);
+        for (int i = 18; i < 27; i++) inv.setItem(i, filler);
 
-        // Sayfalama Mantığı
-        int itemsPerPage = 9; // Orta sıra (9-17 arası)
-        int startIndex = (page - 1) * itemsPerPage;
-        int endIndex = Math.min(startIndex + itemsPerPage, homeNames.size());
+        // 2. Yatak ve Oluşturma Eşyası
+        String bedStr = plugin.getConfig().getString("gui.home-item", "RED_BED");
+        Material bedMat = Material.matchMaterial(bedStr);
+        if (bedMat == null) bedMat = Material.RED_BED; // Varsayılan Kırmızı
 
-        String bedMatName = plugin.getConfig().getString("gui.home-item", "RED_BED");
-        Material bedMat = Material.matchMaterial(bedMatName);
-        if (bedMat == null) bedMat = Material.RED_BED;
-
-        int slot = 9; // Ortadaki sıranın başı
-        for (int i = startIndex; i < endIndex; i++) {
-            String homeName = homeNames.get(i);
-            inv.setItem(slot, createItem(bedMat, "§6" + homeName, "§7Tıkla ve ışınlan!", "§cSilmek için Shift+Sağ Tık"));
-            slot++;
+        // 3. Sayfa Matematiği (Her sayfada 7 ev + 2 buton yeri gibi düşünmeyelim, 9 slot var)
+        int slotsPerPage = 9;
+        int startIndex = (page - 1) * slotsPerPage;
+        
+        // Bu sayfada gösterilecek slotlar (9-17 arası)
+        int guiSlot = 9;
+        
+        for (int i = 0; i < slotsPerPage; i++) {
+            int realHomeIndex = startIndex + i;
+            
+            // Eğer ev varsa -> YATAK KOY
+            if (realHomeIndex < homeNames.size()) {
+                String hName = homeNames.get(realHomeIndex);
+                inv.setItem(guiSlot, createItem(bedMat, "§6" + hName, "§7Tıkla ve Işınlan!", "§cSilmek için Shift+Sağ Tık"));
+            } 
+            // Eğer ev yoksa ama limit dolmamışsa -> OLUŞTUR BUTONU KOY
+            else if (realHomeIndex == homeNames.size() && homeNames.size() < plugin.getHomeManager().getPlayerLimit(p)) {
+                inv.setItem(guiSlot, createItem(Material.LIME_DYE, "§a+ Yeni Ev Oluştur", "§7Tıkla ve bu noktaya ev kaydet"));
+            }
+            
+            guiSlot++;
         }
 
-        // Sayfa Butonları
+        // 4. Sayfa Butonları
         if (page > 1) {
             inv.setItem(18, createItem(Material.ARROW, "§eÖnceki Sayfa"));
         }
-        if (endIndex < homeNames.size()) {
+        
+        // Eğer daha fazla ev varsa "Sonraki" butonunu koy
+        if (homeNames.size() > (startIndex + slotsPerPage)) {
             inv.setItem(26, createItem(Material.ARROW, "§eSonraki Sayfa"));
         }
 
-        // Ortaya 'Bilgi' veya 'Kapat' butonu
         inv.setItem(22, createItem(Material.BARRIER, "§cKapat"));
 
         p.openInventory(inv);
@@ -66,10 +78,8 @@ public class GUIManager {
 
     public static void playSound(Player p, String path) {
         try {
-            String soundName = HTHomes.getInstance().getLanguageManager().getRawString(path);
-            if (soundName != null && !soundName.isEmpty()) {
-                p.playSound(p.getLocation(), Sound.valueOf(soundName), 1f, 1f);
-            }
+            String s = HTHomes.getInstance().getLanguageManager().getRawString(path);
+            if (s != null && !s.isEmpty()) p.playSound(p.getLocation(), Sound.valueOf(s), 1f, 1f);
         } catch (Exception ignored) {}
     }
 
@@ -78,11 +88,11 @@ public class GUIManager {
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
             meta.setDisplayName(name);
-            List<String> loreList = new ArrayList<>();
-            for (String l : lore) loreList.add(l);
-            meta.setLore(loreList);
+            List<String> l = new ArrayList<>();
+            for (String line : lore) l.add(line);
+            meta.setLore(l);
             item.setItemMeta(meta);
         }
         return item;
     }
-}
+    }
