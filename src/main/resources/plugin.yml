@@ -1,13 +1,18 @@
 name: HT-Homes
-version: 2.0.0
+version: 2.1.0
 main: com.hthomes.HTHomes
 api-version: 1.13
 author: mustafa8907
-description: Professional Home Management System
+loadbefore: [Essentials]
+description: Advanced Home System with GUI and Action Bar
 commands:
   home:
     description: Opens the Home GUI
-    aliases: [homes, hthome]
+    aliases: [homes]
+  sethome:
+    description: Sets a home
+  delhome:
+    description: Deletes a home
 permissions:
   homegui.use:
     default: true
