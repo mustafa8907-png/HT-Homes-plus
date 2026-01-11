@@ -1,0 +1,32 @@
+tr:
+  prefix: "&6[HT-Homes] &r"
+  messages:
+    no-permission: "&cİznin yok!"
+    reload-success: "&aKonfigürasyon ve diller yeniden yüklendi!"
+    max-homes: "&cLimit doldu! Sadece {limit} ev ayarlayabilirsin."
+    home-set: "&aEv &e{home} &abaşarıyla ayarlandı!"
+    home-deleted: "&cEv &e{home} &csilindi."
+    home-not-found: "&cEv &e{home} &cbulunamadı."
+    invalid-name: "&cGeçersiz ev adı. Sadece harf ve rakam kullan."
+    teleporting: "&aEv &e{home} &aye &e{time} &asaniye içinde ışınlanıyor..."
+    teleport-success: "&aEv &e{home} &aye ışınlandın!"
+    teleport-cancelled: "&cHareket ettiğin için ışınlanma iptal edildi."
+    usage:
+      - "&e/home &7- GUI'yi aç"
+      - "&e/home set [name] &7- Ev ayarla"
+      - "&e/home delete <name> &7- Ev sil"
+    gui:
+      title: "&8HT-Homes+"
+      items:
+        empty:
+          name: "&cBoş Slot"
+          lore:
+            - "&7Ev ayarlamak için tıkla"
+        filled:
+          name: "&a{home}"
+          lore:
+            - "&7Dünya: &f{world}"
+            - "&7X/Y/Z: &f{x}, {y}, {z}"
+            - ""
+            - "&eSol Tık: &7Işınlan"
+            - "&cShift + Sağ Tık: &7Sil"
