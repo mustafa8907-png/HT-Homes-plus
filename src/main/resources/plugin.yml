@@ -1,0 +1,15 @@
+name: HT-Homes
+version: 2.0.0
+main: com.hthomes.HTHomes
+api-version: 1.13
+authors: mustafa8907
+description: Professional Home Management System
+commands:
+  home:
+    description: Opens the Home GUI
+    aliases: [homes, hthome]
+permissions:
+  homegui.use:
+    default: true
+  homegui.admin:
+    default: op
