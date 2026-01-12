@@ -1,0 +1,21 @@
+gui:
+  title: "&8ホームリスト | ページ {page}"
+  next-page: "&e次のページ ->"
+  prev-page: "&e<- 前のページ"
+  set-home-name: "&c&l+ ホームを作成"
+  set-home-lore: "&7現在地を保存するにはクリック"
+  home-lore: "&7ホームを管理するにはクリック"
+selection-menu:
+  title: "&8管理: {home}"
+  teleport-name: "&a&lテレポート"
+  teleport-lore: "&7移動するにはクリック"
+  delete-name: "&c&l削除"
+  delete-lore: "&7永久に削除する"
+  back-name: "&c&l戻る"
+messages:
+  prefix: "&8[&6HT-Homes&8] &r"
+  teleporting: "&e&c{time}&e秒後にテレポートします..."
+  teleport-success: "&f{home} &aに到着しました！"
+  teleport-cancelled: "&c動いたためテレポートがキャンセルされました！"
+  home-set: "&aホーム &f{home} &aを設置しました！"
+  home-deleted: "&cホーム &f{home} &aを削除しました！"
