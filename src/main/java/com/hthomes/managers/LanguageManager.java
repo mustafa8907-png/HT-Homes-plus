@@ -1,30 +1,43 @@
-package com.hthomes;
+package com.hthomes.managers;
 
-import com.hthomes.commands.HomeCommand;
-import com.hthomes.listeners.GUIListener;
-import com.hthomes.managers.HomeManager;
-import com.hthomes.managers.LanguageManager;
-import org.bukkit.plugin.java.JavaPlugin;
+import com.hthomes.HTHomes;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
-public class HTHomes extends JavaPlugin {
-    private static HTHomes instance;
-    private HomeManager homeManager;
-    private LanguageManager languageManager;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
-    @Override
-    public void onEnable() {
-        instance = this;
-        saveDefaultConfig();
-        
-        this.languageManager = new LanguageManager(this);
-        this.homeManager = new HomeManager(this);
-        
-        getCommand("home").setExecutor(new HomeCommand(this));
-        getCommand("sethome").setExecutor(new HomeCommand(this));
-        getServer().getPluginManager().registerEvents(new GUIListener(this), this);
+public class LanguageManager {
+    private final HTHomes plugin;
+    private FileConfiguration langConfig;
+
+    public LanguageManager(HTHomes plugin) {
+        this.plugin = plugin;
+        loadLanguage();
     }
 
-    public static HTHomes getInstance() { return instance; }
-    public HomeManager getHomeManager() { return homeManager; }
-    public LanguageManager getLanguageManager() { return languageManager; }
-            }
+    public void loadLanguage() {
+        String langTag = plugin.getConfig().getString("language", "en");
+        File langFile = new File(plugin.getDataFolder() + "/languages", langTag + ".yml");
+
+        if (!langFile.exists()) {
+            plugin.saveResource("languages/" + langTag + ".yml", false);
+        }
+
+        this.langConfig = YamlConfiguration.loadConfiguration(langFile);
+        
+        // Eksik mesajları iç kaynakla tamamla
+        InputStream defStream = plugin.getResource("languages/" + langTag + ".yml");
+        if (defStream != null) {
+            this.langConfig.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(defStream, StandardCharsets.UTF_8)));
+        }
+    }
+
+    public String getMessage(String path) {
+        String msg = langConfig.getString(path, "Message not found: " + path);
+        return ChatColor.translateAlternateColorCodes('&', msg);
+    }
+}
