@@ -1,21 +1,62 @@
-# HT-Homes+ Configuration
-language: en
+# HT-Homes v4.0 (Advanced GUI & Geyser/Bedrock Friendly)
 
-gui:
-  title: "&8Evlerim &7(Sayfa {page})"
-  rows: 3
-  fill-item: "GRAY_STAINED_GLASS_PANE"
-  # Menüdeki ev ikonunun türü (RED_BED, BLUE_BED, CHEST vb.)
-  home-item: "RED_BED" 
-  next-page-item: "ARROW"
-  prev-page-item: "ARROW"
-
+# --- Teleport Settings ---
 teleport:
-  use-action-bar: true
-  delay: 3
+  delay: 5 # Countdown in seconds
+  use-action-bar: true # Show countdown above hotbar
+  cancel-on-move: true # Stop teleport if player moves
 
-# Oyuncu gruplarına göre ev limitleri (permission: homegui.group.vip)
+# --- Group Limits (LuckPerms Compatible) ---
+# Permission: hthomes.limit.<group_name>
 groups:
   default: 3
-  vip: 5
-  mvp: 10
+  vip: 7
+  mvp: 12
+  admin: 50
+
+# --- GUI Layout Settings ---
+gui:
+  title: "&8Home List | Page {page}"
+  rows: 3
+  fill-item: "GRAY_STAINED_GLASS_PANE"
+  next-page: "&eNext Page ->"
+  prev-page: "&e<- Previous Page"
+  
+  # Main Menu Icons
+  set-home-icon: "RED_BED"
+  set-home-name: "&c&l+ Create Home"
+  set-home-lore:
+    - "&7Click to save current location."
+  
+  home-icon: "LIME_BED"
+  home-lore:
+    - "&7Click to manage this home."
+    - "&7(Teleport or Delete)"
+
+# --- Selection Menu (Sub-menu for Geyser support) ---
+selection-menu:
+  title: "&8Manage: {home}"
+  
+  teleport-icon: "ENDER_PEARL"
+  teleport-name: "&a&lTeleport"
+  teleport-lore:
+    - "&7Click to travel to this home."
+    
+  delete-icon: "SKELETON_SKULL"
+  delete-name: "&c&lDelete Home"
+  delete-lore:
+    - "&7Click to permanently delete."
+    
+  back-icon: "BARRIER"
+  back-name: "&cBack"
+
+# --- Plugin Messages ---
+messages:
+  prefix: "&8[&6HT-Homes&8] &r"
+  teleporting: "&eTeleporting in &c{time} &eseconds..."
+  teleport-success: "&aTeleported to &f{home}&a!"
+  teleport-cancelled: "&cTeleport cancelled because you moved."
+  home-set: "&aSuccessfully set home: &f{home}"
+  home-deleted: "&cSuccessfully deleted home: &f{home}"
+  max-homes: "&cYou have reached your home limit!"
+  no-permission: "&cYou don't have permission to do this."
