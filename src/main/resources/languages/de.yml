@@ -1,31 +1,21 @@
-  prefix: "&6[HT-Homes] &r"
-  messages:
-    no-permission: "&cDu hast keine Berechtigung!"
-    reload-success: "&aKonfiguration und Sprachen neu geladen!"
-    max-homes: "&cLimit erreicht! Du kannst nur {limit} Homes setzen."
-    home-set: "&aHome &e{home} &aerfolgreich gesetzt!"
-    home-deleted: "&cHome &e{home} &cgelöscht."
-    home-not-found: "&cHome &e{home} &cnicht gefunden."
-    invalid-name: "&cUngültiger Home-Name. Verwende nur Buchstaben und Zahlen."
-    teleporting: "&aTeleportiere zu &e{home} &ain &e{time} &asekunden..."
-    teleport-success: "&aNach &e{home} &ateleportiert!"
-    teleport-cancelled: "&cTeleport abgebrochen, weil du dich bewegt hast."
-    usage:
-      - "&e/home &7- Öffne GUI"
-      - "&e/home set [name] &7- Setze ein Home"
-      - "&e/home delete <name> &7- Lösche ein Home"
-    gui:
-      title: "&8HT-Homes+"
-      items:
-        empty:
-          name: "&cLeerer Slot"
-          lore:
-            - "&7Klicke, um ein Home zu setzen"
-        filled:
-          name: "&a{home}"
-          lore:
-            - "&7Welt: &f{world}"
-            - "&7X/Y/Z: &f{x}, {y}, {z}"
-            - ""
-            - "&eLinksklick: &7Teleportieren"
-            - "&cShift + Rechtsklick: &7Löschen"
+gui:
+  title: "&8Hausliste | Seite {page}"
+  next-page: "&eNächste Seite ->"
+  prev-page: "&e<- Vorherige Seite"
+  set-home-name: "&c&l+ Haus erstellen"
+  set-home-lore: "&7Klicken, um Position zu speichern"
+  home-lore: "&7Klicken zum Verwalten"
+selection-menu:
+  title: "&8Verwalten: {home}"
+  teleport-name: "&a&lTeleportieren"
+  teleport-lore: "&7Klicken zum Reisen"
+  delete-name: "&c&lLöschen"
+  delete-lore: "&7Dauerhaft entfernen"
+  back-name: "&c&lZurück"
+messages:
+  prefix: "&8[&6HT-Homes&8] &r"
+  teleporting: "&eTeleportation in &c{time}&es..."
+  teleport-success: "&aBei &f{home} &aangekommen!"
+  teleport-cancelled: "&cTeleport abgebrochen!"
+  home-set: "&aHaus &f{home} &agesetzt!"
+  home-deleted: "&cHaus &f{home} &agelöscht!"
