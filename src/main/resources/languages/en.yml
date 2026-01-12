@@ -1,30 +1,21 @@
-prefix: "&6[HT-Homes] &r"
-messages:
-  no-permission: "&cYou don't have permission!"
-  reload-success: "&aConfiguration and languages reloaded!"
-  max-homes: "&cLimit reached! You can only set {limit} homes."
-  home-set: "&aHome &e{home} &aset successfully!"
-  home-deleted: "&cHome &e{home} &cdeleted."
-  home-not-found: "&cHome &e{home} &cnot found."
-  invalid-name: "&cInvalid home name. Use letters and numbers only."
-  teleporting: "&aTeleporting to &e{home} &ain &e{time} &aseconds..."
-  teleport-success: "&aTeleported to &e{home}!"
-  teleport-cancelled: "&cTeleport cancelled because you moved."
-  usage:
-    - "&e/home &7- Open GUI"
-    - "&e/home set [name] &7- Set a home"
-    - "&e/home delete <name> &7- Delete a home"
 gui:
-  title: "&8HT-Homes+"
-  items:
-    empty:
-      name: "&cEmpty Slot"
-      lore: ["&7Click to set a home here"]
-    filled:
-      name: "&a{home}"
-      lore:
-        - "&7World: &f{world}"
-        - "&7X/Y/Z: &f{x}, {y}, {z}"
-        - ""
-        - "&eLeft-Click: &7Teleport"
-        - "&cShift + Right-Click: &7Delete"
+  title: "&8Home List | Page {page}"
+  next-page: "&eNext Page ->"
+  prev-page: "&e<- Previous Page"
+  set-home-name: "&c&l+ Create Home"
+  set-home-lore: "&7Click to save current location"
+  home-lore: "&7Click to manage this home"
+selection-menu:
+  title: "&8Manage: {home}"
+  teleport-name: "&a&lTeleport"
+  teleport-lore: "&7Click to travel"
+  delete-name: "&c&lDelete"
+  delete-lore: "&7Click to remove"
+  back-name: "&c&lBack"
+messages:
+  prefix: "&8[&6HT-Homes&8] &r"
+  teleporting: "&eTeleporting in &c{time}&es..."
+  teleport-success: "&aArrived at &f{home}&a!"
+  teleport-cancelled: "&cTeleport cancelled (you moved)!"
+  home-set: "&aHome &f{home} &aset!"
+  home-deleted: "&cHome &f{home} &adeleted!"
