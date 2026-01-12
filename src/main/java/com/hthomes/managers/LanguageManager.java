@@ -4,11 +4,14 @@ import com.hthomes.HTHomes;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+package com.hthomes.managers;
+
+import com.hthomes.HTHomes;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 
 public class LanguageManager {
     private final HTHomes plugin;
@@ -16,28 +19,31 @@ public class LanguageManager {
 
     public LanguageManager(HTHomes plugin) {
         this.plugin = plugin;
-        loadLanguage();
+        reloadLanguages();
     }
 
-    public void loadLanguage() {
+    public void reloadLanguages() {
+        // config.yml'den hangi dilin seçildiğini oku (Varsayılan: en)
         String langTag = plugin.getConfig().getString("language", "en");
-        File langFile = new File(plugin.getDataFolder() + "/languages", langTag + ".yml");
+        File langFile = new File(plugin.getDataFolder(), "languages/" + langTag + ".yml");
 
+        // Eğer seçilen dil dosyası klasörde yoksa, hata vermemesi için varsayılan olarak en.yml'ye dön
         if (!langFile.exists()) {
-            plugin.saveResource("languages/" + langTag + ".yml", false);
+            plugin.getLogger().warning("Dil dosyasi bulunamadi: " + langTag + ".yml! Varsayilan (en.yml) yukleniyor.");
+            langFile = new File(plugin.getDataFolder(), "languages/en.yml");
         }
 
+        // Seçilen dil dosyasını yükle
         this.langConfig = YamlConfiguration.loadConfiguration(langFile);
-        
-        // Eksik mesajları iç kaynakla tamamla
-        InputStream defStream = plugin.getResource("languages/" + langTag + ".yml");
-        if (defStream != null) {
-            this.langConfig.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(defStream, StandardCharsets.UTF_8)));
-        }
     }
 
     public String getMessage(String path) {
-        String msg = langConfig.getString(path, "Message not found: " + path);
+        if (langConfig == null) return "Lang file not loaded!";
+        String msg = langConfig.getString(path);
+        
+        // Eğer mesaj bulunamazsa yolu hata olarak döndür (debug için kolaylık sağlar)
+        if (msg == null) return "Missing message: " + path;
+        
         return ChatColor.translateAlternateColorCodes('&', msg);
     }
 }
