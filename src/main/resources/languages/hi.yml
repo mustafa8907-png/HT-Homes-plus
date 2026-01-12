@@ -1,31 +1,21 @@
-prefix: "&6[HT-Homes] &r"
+gui:
+  title: "&8घरों की सूची | पेज {page}"
+  next-page: "&eअगला पेज ->"
+  prev-page: "&e<- पिछला पेज"
+  set-home-name: "&c&l+ घर बनाएं"
+  set-home-lore: "&7स्थान बचाने के लिए क्लिक करें"
+  home-lore: "&7प्रबंधित करने के लिए क्लिक करें"
+selection-menu:
+  title: "&8प्रबंधन: {home}"
+  teleport-name: "&a&lटेलीपोर्ट"
+  teleport-lore: "&7वहाँ जाने के लिए क्लिक करें"
+  delete-name: "&c&lमिटाएं"
+  delete-lore: "&7हमेशा के लिए हटा दें"
+  back-name: "&c&lपीछे"
 messages:
-  no-permission: "&cआपके पास अनुमति नहीं है!"
-  reload-success: "&aकॉन्फ़िगरेशन और भाषाएँ फिर से लोड की गईं!"
-  max-homes: "&cसीमा पूरी हो गई! आप केवल {limit} घर सेट कर सकते हैं।"
-  home-set: "&aघर &e{home} &aसफलतापूर्वक सेट किया गया!"
-  home-deleted: "&cघर &e{home} &cहटा दिया गया।"
-  home-not-found: "&cघर &e{home} &cनहीं मिला।"
-  invalid-name: "&cअमान्य घर नाम। केवल अक्षर और नंबर उपयोग करें।"
-  teleporting: "&aआप &e{time} &aseconds में &e{home} &aपर टेलीपोर्ट हो रहे हैं..."
-  teleport-success: "&aआप &e{home} &aपर टेलीपोर्ट हो गए!"
-  teleport-cancelled: "&cआप हिले, इसलिए टेलीपोर्ट रद्द कर दिया गया।"
-  usage:
-    - "&e/home &7- GUI खोलें"
-    - "&e/home set [name] &7- घर सेट करें"
-    - "&e/home delete <name> &7- घर हटाएँ"
-  gui:
-    title: "&8HT-Homes+"
-    items:
-      empty:
-        name: "&cखाली स्लॉट"
-        lore:
-          - "&7यहाँ घर सेट करने के लिए क्लिक करें"
-      filled:
-        name: "&a{home}"
-        lore:
-          - "&7दुनिया: &f{world}"
-          - "&7X/Y/Z: &f{x}, {y}, {z}"
-          - ""
-          - "&eबायाँ क्लिक: &7टेलीपोर्ट"
-          - "&cShift + दायाँ क्लिक: &7हटाएँ"
+  prefix: "&8[&6HT-Homes&8] &r"
+  teleporting: "&eटेलीपोर्ट हो रहा है &c{time}&es..."
+  teleport-success: "&aआप &f{home} &aपर पहुँच गए हैं!"
+  teleport-cancelled: "&cटेलीपोर्ट रद्द कर दिया गया!"
+  home-set: "&aघर &f{home} &aतैयार है!"
+  home-deleted: "&cघर &f{home} &aहटा दिया गया!"
