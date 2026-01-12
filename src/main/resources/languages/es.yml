@@ -1,31 +1,21 @@
-  prefix: "&6[HT-Homes] &r"
-  messages:
-    no-permission: "&c¡No tienes permiso!"
-    reload-success: "&a¡Configuración y lenguajes recargados!"
-    max-homes: "&c¡Límite alcanzado! Solo puedes establecer {limit} hogares."
-    home-set: "&aHogar &e{home} &aestablecido con éxito!"
-    home-deleted: "&cHogar &e{home} &celiminado."
-    home-not-found: "&cHogar &e{home} &cno encontrado."
-    invalid-name: "&cNombre de hogar inválido. Usa solo letras y números."
-    teleporting: "&aTeleportando a &e{home} &aen &e{time} &asegundos..."
-    teleport-success: "&a¡Teletransportado a &e{home}!"
-    teleport-cancelled: "&cTeleportación cancelada porque te moviste."
-    usage:
-      - "&e/home &7- Abrir GUI"
-      - "&e/home set [name] &7- Establecer un hogar"
-      - "&e/home delete <name> &7- Eliminar un hogar"
-    gui:
-      title: "&8HT-Homes+"
-      items:
-        empty:
-          name: "&cEspacio vacío"
-          lore:
-            - "&7Haz clic para establecer un hogar aquí"
-        filled:
-          name: "&a{home}"
-          lore:
-            - "&7Mundo: &f{world}"
-            - "&7X/Y/Z: &f{x}, {y}, {z}"
-            - ""
-            - "&eClic izquierdo: &7Teleportar"
-            - "&cShift + Clic derecho: &7Eliminar"
+gui:
+  title: "&8Lista de Casas | Pág. {page}"
+  next-page: "&eSiguiente ->"
+  prev-page: "&e<- Anterior"
+  set-home-name: "&c&l+ Crear Casa"
+  set-home-lore: "&7Click para guardar ubicación"
+  home-lore: "&7Click para administrar"
+selection-menu:
+  title: "&8Gestionar: {home}"
+  teleport-name: "&a&lTeletransportarse"
+  teleport-lore: "&7Click para viajar"
+  delete-name: "&c&lEliminar"
+  delete-lore: "&7Eliminar permanentemente"
+  back-name: "&c&lVolver"
+messages:
+  prefix: "&8[&6HT-Homes&8] &r"
+  teleporting: "&eTeletransportando en &c{time}&es..."
+  teleport-success: "&aHas llegado a &f{home}&a!"
+  teleport-cancelled: "&c¡Teletransporte cancelado!"
+  home-set: "&aCasa &f{home} &aguardada!"
+  home-deleted: "&cCasa &f{home} &aeliminada!"
