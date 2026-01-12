@@ -1,46 +1,30 @@
-package com.hthomes.managers;
+package com.hthomes;
 
-import com.hthomes.HTHomes;
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
+import com.hthomes.commands.HomeCommand;
+import com.hthomes.listeners.GUIListener;
+import com.hthomes.managers.HomeManager;
+import com.hthomes.managers.LanguageManager;
+import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.util.List;
-import java.util.stream.Collectors;
+public class HTHomes extends JavaPlugin {
+    private static HTHomes instance;
+    private HomeManager homeManager;
+    private LanguageManager languageManager;
 
-public class LanguageManager {
-    private final HTHomes plugin;
-    private FileConfiguration langConfig;
-
-    public LanguageManager(HTHomes plugin) {
-        this.plugin = plugin;
-        loadLanguage();
+    @Override
+    public void onEnable() {
+        instance = this;
+        saveDefaultConfig();
+        
+        this.languageManager = new LanguageManager(this);
+        this.homeManager = new HomeManager(this);
+        
+        getCommand("home").setExecutor(new HomeCommand(this));
+        getCommand("sethome").setExecutor(new HomeCommand(this));
+        getServer().getPluginManager().registerEvents(new GUIListener(this), this);
     }
 
-    public void loadLanguage() {
-        String langName = plugin.getConfig().getString("language", "en");
-        File langFile = new File(plugin.getDataFolder(), "languages/" + langName + ".yml");
-        if (!langFile.exists()) {
-            langFile.getParentFile().mkdirs();
-            plugin.saveResource("languages/en.yml", false);
-        }
-        langConfig = YamlConfiguration.loadConfiguration(langFile);
-    }
-
-    public String getMessage(String path) {
-        String prefix = langConfig.getString("prefix", "");
-        String msg = langConfig.getString(path, path);
-        return ChatColor.translateAlternateColorCodes('&', prefix + msg);
-    }
-
-    public String getRawString(String path) {
-        return ChatColor.translateAlternateColorCodes('&', langConfig.getString(path, path));
-    }
-
-    public List<String> getStringList(String path) {
-        return langConfig.getStringList(path).stream()
-                .map(s -> ChatColor.translateAlternateColorCodes('&', s))
-                .collect(Collectors.toList());
-    }
-    }
+    public static HTHomes getInstance() { return instance; }
+    public HomeManager getHomeManager() { return homeManager; }
+    public LanguageManager getLanguageManager() { return languageManager; }
+            }
