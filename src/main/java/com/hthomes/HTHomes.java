@@ -21,17 +21,7 @@ public class HTHomes extends JavaPlugin {
         
         getCommand("home").setExecutor(new HomeCommand(this));
         getCommand("sethome").setExecutor(new HomeCommand(this));
-        getCommand("delhome").setExecutor(new HomeCommand(this));
-        
         getServer().getPluginManager().registerEvents(new GUIListener(this), this);
-        
-        getLogger().info("\n§a-----------------------------\n§6HT-Homes+ §eAktif!\n§fSürüm: 2.1.0\n§a-----------------------------");
-    }
-
-    @Override
-    public void onDisable() {
-        if (homeManager != null) homeManager.saveHomes();
-        getLogger().info("§cHT-Homes+ Kapatıldı, Veriler Kaydedildi.");
     }
 
     public static HTHomes getInstance() { return instance; }
