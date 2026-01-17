@@ -1,76 +1,100 @@
-// EKLENECEK IMPORTLAR (Dosyanın en tepesine):
-import org.bukkit.scheduler.BukkitRunnable;
+package com.hthomes.managers;
+
+import com.hthomes.HTHomes;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
-// 1. BU METODU ESKİSİYLE DEĞİŞTİR (Action Bar ve Süre Sorunu Çözümü):
-public void teleportToHome(Player player, String homeName) {
-    if (!homesConfig.contains(player.getUniqueId() + "." + homeName)) {
-        player.sendMessage("§cEv bulunamadı!");
-        return;
+import java.io.File;
+import java.io.IOException;
+
+public class HomeManager {
+    private final HTHomes plugin;
+    private FileConfiguration homesConfig;
+    private File homesFile;
+
+    public HomeManager(HTHomes plugin) {
+        this.plugin = plugin;
+        setupHomes();
     }
 
-    String path = player.getUniqueId() + "." + homeName;
-    String worldName = homesConfig.getString(path + ".world");
-    
-    if (plugin.getServer().getWorld(worldName) == null) {
-        player.sendMessage("§cBu evin dünyası yüklenemedi!");
-        return;
-    }
-
-    double x = homesConfig.getDouble(path + ".x");
-    double y = homesConfig.getDouble(path + ".y");
-    double z = homesConfig.getDouble(path + ".z");
-    float yaw = (float) homesConfig.getDouble(path + ".yaw");
-    float pitch = (float) homesConfig.getDouble(path + ".pitch");
-
-    org.bukkit.Location loc = new org.bukkit.Location(plugin.getServer().getWorld(worldName), x, y, z, yaw, pitch);
-
-    player.closeInventory();
-    player.sendMessage("§aIşınlanma başlatıldı, hareket etme!");
-
-    // Geri sayım ve Action Bar sistemi
-    new BukkitRunnable() {
-        int timeLeft = 3;
-
-        @Override
-        public void run() {
-            if (!player.isOnline()) { this.cancel(); return; }
-
-            if (timeLeft <= 0) {
-                player.teleport(loc);
-                player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1f);
-                
-                // Action Bar Mesajı (Başarılı)
-                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, 
-                        new TextComponent("§a§lEVİNE HOŞ GELDİN!"));
-                
-                this.cancel();
-            } else {
-                // Action Bar Mesajı (Sayım)
-                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, 
-                        new TextComponent("§eIşınlanmaya §6" + timeLeft + " §esaniye..."));
-                
-                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 2f);
-                timeLeft--;
-            }
+    private void setupHomes() {
+        homesFile = new File(plugin.getDataFolder(), "homes.yml");
+        if (!homesFile.exists()) {
+            try { homesFile.createNewFile(); } catch (IOException e) { e.printStackTrace(); }
         }
-    }.runTaskTimer(plugin, 0L, 20L);
-}
-
-// 2. DOSYANIN EN ALTINA BU YENİ METOTLARI EKLE (İkon Sistemi):
-public void setHomeIcon(Player player, String homeName, org.bukkit.Material material) {
-    homesConfig.set(player.getUniqueId() + "." + homeName + ".icon", material.name());
-    saveHomes();
-}
-
-public org.bukkit.Material getHomeIcon(Player player, String homeName) {
-    String iconName = homesConfig.getString(player.getUniqueId() + "." + homeName + ".icon");
-    if (iconName == null) return org.bukkit.Material.LIME_BED;
-    try {
-        return org.bukkit.Material.valueOf(iconName);
-    } catch (Exception e) {
-        return org.bukkit.Material.LIME_BED;
+        homesConfig = YamlConfiguration.loadConfiguration(homesFile);
     }
-                           }
+
+    public void setHome(Player player, String homeName) {
+        Location loc = player.getLocation();
+        String path = player.getUniqueId() + "." + homeName;
+        homesConfig.set(path + ".world", loc.getWorld().getName());
+        homesConfig.set(path + ".x", loc.getX());
+        homesConfig.set(path + ".y", loc.getY());
+        homesConfig.set(path + ".z", loc.getZ());
+        homesConfig.set(path + ".yaw", loc.getYaw());
+        homesConfig.set(path + ".pitch", loc.getPitch());
+        homesConfig.set(path + ".icon", Material.LIME_BED.name()); // Varsayılan ikon
+        saveHomes();
+    }
+
+    public void deleteHome(Player player, String homeName) {
+        homesConfig.set(player.getUniqueId() + "." + homeName, null);
+        saveHomes();
+    }
+
+    public void teleportToHome(Player player, String homeName) {
+        String path = player.getUniqueId() + "." + homeName;
+        if (!homesConfig.contains(path)) return;
+
+        Location loc = new Location(
+                plugin.getServer().getWorld(homesConfig.getString(path + ".world")),
+                homesConfig.getDouble(path + ".x"),
+                homesConfig.getDouble(path + ".y"),
+                homesConfig.getDouble(path + ".z"),
+                (float) homesConfig.getDouble(path + ".yaw"),
+                (float) homesConfig.getDouble(path + ".pitch")
+        );
+
+        player.closeInventory();
+        player.sendMessage(plugin.getLanguageManager().getMessage("messages.teleport_starting"));
+
+        new BukkitRunnable() {
+            int timeLeft = 3;
+            @Override
+            public void run() {
+                if (!player.isOnline()) { this.cancel(); return; }
+                if (timeLeft <= 0) {
+                    player.teleport(loc);
+                    player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1f);
+                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§a§lHT-HOMES+"));
+                    this.cancel();
+                } else {
+                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§eTeleporting in: §6" + timeLeft));
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 2f);
+                    timeLeft--;
+                }
+            }
+        }.runTaskTimer(plugin, 0L, 20L);
+    }
+
+    public void setHomeIcon(Player player, String homeName, Material material) {
+        homesConfig.set(player.getUniqueId() + "." + homeName + ".icon", material.name());
+        saveHomes();
+    }
+
+    public Material getHomeIcon(Player player, String homeName) {
+        String name = homesConfig.getString(player.getUniqueId() + "." + homeName + ".icon");
+        return name != null ? Material.valueOf(name) : Material.LIME_BED;
+    }
+
+    public FileConfiguration getHomesConfig() { return homesConfig; }
+    public void saveHomes() { try { homesConfig.save(homesFile); } catch (IOException e) { e.printStackTrace(); } }
+    }
