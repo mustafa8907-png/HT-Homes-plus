@@ -30,6 +30,7 @@ public class HomeManager {
         homesConfig = YamlConfiguration.loadConfiguration(homesFile);
     }
 
+    // Ev Kaydetme
     public void setHome(Player p, String name, Location loc) {
         String path = p.getUniqueId() + "." + name;
         homesConfig.set(path + ".world", loc.getWorld().getName());
@@ -38,25 +39,34 @@ public class HomeManager {
         homesConfig.set(path + ".z", loc.getZ());
         homesConfig.set(path + ".yaw", loc.getYaw());
         homesConfig.set(path + ".pitch", loc.getPitch());
-        if (!homesConfig.contains(path + ".icon")) homesConfig.set(path + ".icon", "LIME_BED");
+        // Varsayılan ikon
+        if (!homesConfig.contains(path + ".icon")) {
+            homesConfig.set(path + ".icon", "LIME_BED"); 
+        }
         save();
     }
 
+    // YENİ: İkon Kaydetme
     public void setHomeIcon(Player p, String name, Material mat) {
         homesConfig.set(p.getUniqueId() + "." + name + ".icon", mat.name());
         save();
     }
 
+    // YENİ: İkon Okuma
     public Material getHomeIcon(Player p, String name) {
-        String matName = homesConfig.getString(p.getUniqueId() + "." + name + ".icon", "LIME_BED");
-        return Material.matchMaterial(matName);
+        String matName = homesConfig.getString(p.getUniqueId() + "." + name + ".icon");
+        if (matName == null) return Material.LIME_BED; // Hata olursa varsayılan
+        return Material.matchMaterial(matName) != null ? Material.matchMaterial(matName) : Material.LIME_BED;
     }
 
+    // Evleri Listeleme
     public Map<String, Location> getHomes(Player p) {
         Map<String, Location> homes = new HashMap<>();
         if (homesConfig.contains(p.getUniqueId().toString())) {
             for (String key : homesConfig.getConfigurationSection(p.getUniqueId().toString()).getKeys(false)) {
                 String path = p.getUniqueId() + "." + key;
+                if (homesConfig.getString(path + ".world") == null) continue; // Hatalı veriyi atla
+                
                 Location loc = new Location(
                         plugin.getServer().getWorld(homesConfig.getString(path + ".world")),
                         homesConfig.getDouble(path + ".x"),
@@ -77,4 +87,5 @@ public class HomeManager {
     }
 
     public void save() { try { homesConfig.save(homesFile); } catch (IOException e) { e.printStackTrace(); } }
-}
+    public FileConfiguration getHomesConfig() { return homesConfig; }
+            }
