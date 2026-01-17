@@ -3,7 +3,7 @@
 # Version: 4.1.0
 
 # Selected language file from languages/ folder (e.g., tr, en, ru, fr)
-language: "tr"
+language: "en"
 
 # --- GUI Settings ---
 gui:
