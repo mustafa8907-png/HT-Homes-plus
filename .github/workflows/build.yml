@@ -23,10 +23,8 @@ jobs:
     - name: Build with Maven
       run: mvn clean package -B
 
-    - name: Upload Build Artifact
-      # Bu adım jar dosyasını yakalar ve GitHub paneline yükler
+    - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
         name: HTHomes-Release
-        path: target/HTHomes-*.jar
-        if-no-files-found: error
+        path: target/*.jar
