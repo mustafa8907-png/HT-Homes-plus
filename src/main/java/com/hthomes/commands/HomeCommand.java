@@ -6,7 +6,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import java.util.Map;
 
 public class HomeCommand implements CommandExecutor {
@@ -18,22 +17,35 @@ public class HomeCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!(sender instanceof Player)) return true;
+        if (!(sender instanceof Player)) {
+            sender.sendMessage("Bu komut sadece oyuncular içindir!");
+            return true;
+        }
+        
         Player p = (Player) sender;
 
+        // /home - /ev
         if (cmd.getName().equalsIgnoreCase("home")) {
+            if (!p.hasPermission("hthomes.user.home")) {
+                noPerm(p);
+                return true;
+            }
             GUIManager.openHomeList(p, 1);
             return true;
         }
 
+        // /sethome - /evayarla
         if (cmd.getName().equalsIgnoreCase("sethome")) {
-            if (args.length == 0) {
-                p.sendMessage("§cKullanım: /sethome <isim>");
+            if (!p.hasPermission("hthomes.user.sethome")) {
+                noPerm(p);
                 return true;
             }
-            String name = args[0];
+            if (args.length == 0) {
+                p.sendMessage("§cKullanım: /" + label + " <isim>");
+                return true;
+            }
             
-            // Koruma Kontrolü (WorldGuard / GriefPrevention)
+            String name = args[0];
             if (!plugin.getHookManager().canBuild(p, p.getLocation())) {
                 plugin.getLangManager().sendMessage(p, "messages.unsafe-area", null);
                 return true;
@@ -44,9 +56,14 @@ public class HomeCommand implements CommandExecutor {
             return true;
         }
 
+        // /delhome - /evsil
         if (cmd.getName().equalsIgnoreCase("delhome")) {
+            if (!p.hasPermission("hthomes.user.delhome")) {
+                noPerm(p);
+                return true;
+            }
             if (args.length == 0) {
-                p.sendMessage("§cKullanım: /delhome <isim>");
+                p.sendMessage("§cKullanım: /" + label + " <isim>");
                 return true;
             }
             String name = args[0];
@@ -61,4 +78,9 @@ public class HomeCommand implements CommandExecutor {
 
         return true;
     }
-}
+
+    private void noPerm(Player p) {
+        // Dil dosyasından "no-permission" mesajını çeker
+        plugin.getLangManager().sendMessage(p, "messages.no-permission", null);
+    }
+    }
