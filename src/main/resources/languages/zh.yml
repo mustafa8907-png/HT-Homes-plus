@@ -1,0 +1,27 @@
+# HT-Homes+ Chinese Language File
+gui:
+  title: "<gradient:#4facfe:#00f2fe>家园列表</gradient> <gray>(第 {page} 页)"
+  home-lore: "<gray>点击进行管理"
+  prev-page: "<yellow>« 上一页"
+  next-page: "<yellow>下一页 »"
+
+confirm-gui:
+  title: "<red>确定删除 {home}?"
+  yes-name: "<green>确定删除"
+  yes-lore: "<gray>此操作无法撤销！"
+  no-name: "<red>取消返回"
+  no-lore: "<gray>返回管理菜单"
+
+selection-menu:
+  title: "<gray>管理: <white>{home}"
+  teleport-name: "<green>传送"
+  delete-name: "<red>删除家园"
+
+messages:
+  prefix: "<gradient:#4facfe:#00f2fe>[HT-Homes+]</gradient> "
+  home-set: "<gray>家园 <white>{home} <gray>已设置！"
+  home-deleted: "<gray>家园 <white>{home} <gray>已删除。"
+  teleporting: "<gray>正在传送... <white>{time}秒"
+  teleport-success: "<gray>已成功传送到 <white>{home}<gray>。"
+  unsafe-area: "<red>错误！<gray>该区域受保护。"
+  no-permission: "<red>错误！<gray>您没有权限。"
