@@ -1,0 +1,26 @@
+gui:
+  title: "<gradient:#4facfe:#00f2fe>집 목록</gradient> <gray>({page} 페이지)"
+  home-lore: "<gray>클릭하여 관리"
+  prev-page: "<yellow>« 이전 페이지"
+  next-page: "<yellow>다음 페이지 »"
+
+confirm-gui:
+  title: "<red>{home} 삭제하시겠습니까?"
+  yes-name: "<green>네, 삭제합니다"
+  yes-lore: "<gray>이 작업은 되돌릴 수 없습니다!"
+  no-name: "<red>아니요, 취소합니다"
+  no-lore: "<gray>메뉴로 돌아가기"
+
+selection-menu:
+  title: "<gray>관리: <white>{home}"
+  teleport-name: "<green>이동하기"
+  delete-name: "<red>집 삭제"
+
+messages:
+  prefix: "<gradient:#4facfe:#00f2fe>[HT-Homes+]</gradient> "
+  home-set: "<white>{home} <gray>집이 설정되었습니다!"
+  home-deleted: "<red>{home} <gray>집이 삭제되었습니다."
+  teleporting: "<gray>이동 중... <white>{time}초"
+  teleport-success: "<white>{home} <gray>(으)로 이동했습니다."
+  unsafe-area: "<red>오류! <gray>보호된 구역입니다."
+  no-permission: "<red>오류! <gray>권한이 없습니다."
