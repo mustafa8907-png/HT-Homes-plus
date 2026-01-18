@@ -1,21 +1,27 @@
+# HT-Homes+ Turkish Language File
 gui:
-  title: "&8Ev Listesi | Sayfa {page}"
-  next-page: "&eSonraki Sayfa ->"
-  prev-page: "&e<- Önceki Sayfa"
-  set-home-name: "&c&l+ Ev Oluştur"
-  set-home-lore: "&7Bulunduğun konumu kaydetmek için tıkla"
-  home-lore: "&7Bu evi yönetmek için tıkla"
+  title: "<gradient:#ff9a9e:#fecfef>Ev Listesi</gradient> <gray>(Sayfa: {page})"
+  home-lore: "<gray>Yönetmek için tıklayın"
+  prev-page: "<yellow>« Önceki Sayfa"
+  next-page: "<yellow>Sonraki Sayfa »"
+
+confirm-gui:
+  title: "<red>Silinsin mi: {home}?"
+  yes-name: "<green>EVET, SİL"
+  yes-lore: "<gray>Bu işlem geri alınamaz!"
+  no-name: "<red>HAYIR, VAZGEÇ"
+  no-lore: "<gray>Menüye geri dön"
+
 selection-menu:
-  title: "&8Yönet: {home}"
-  teleport-name: "&a&lIşınlan"
-  teleport-lore: "&7Bu eve gitmek için tıkla"
-  delete-name: "&c&lSil"
-  delete-lore: "&7Bu evi kalıcı olarak sil"
-  back-name: "&c&lGeri Dön"
+  title: "<gray>Yönet: <white>{home}"
+  teleport-name: "<green>Işınlan"
+  delete-name: "<red>Evi Sil"
+
 messages:
-  prefix: "&8[&6HT-Homes&8] &r"
-  teleporting: "&eIşınlanılıyor: &c{time}&es..."
-  teleport-success: "&f{home} &aadlı eve ışınlandın!"
-  teleport-cancelled: "&cHareket ettiğin için ışınlanma iptal edildi!"
-  home-set: "&f{home} &aadlı ev başarıyla kuruldu!"
-  home-deleted: "&f{home} &aadlı ev silindi!"
+  prefix: "<gradient:#a18cd1:#fbc2eb>[HT-Homes+]</gradient> "
+  home-set: "<gray>{home} <white>adlı eviniz oluşturuldu!"
+  home-deleted: "<red>{home} <gray>adlı eviniz silindi."
+  teleporting: "<gray>Işınlanılıyor... <white>{time}s"
+  teleport-success: "<green>{home} <gray>evine başarıyla ışınlandınız."
+  unsafe-area: "<red>Hata! <gray>Bu bölge korumalı, burada işlem yapamazsınız."
+  no-permission: "<red>Hata! <gray>Bunu yapmak için yetkiniz yok."
