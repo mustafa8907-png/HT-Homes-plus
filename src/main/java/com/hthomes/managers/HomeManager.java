@@ -3,79 +3,91 @@ package com.hthomes.managers;
 import com.hthomes.HTHomes;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class HomeManager {
     private final HTHomes plugin;
-    private FileConfiguration homesConfig;
-    private File homesFile;
+    private FileConfiguration config;
+    private final File file;
 
     public HomeManager(HTHomes plugin) {
         this.plugin = plugin;
-        setup();
-    }
-
-    private void setup() {
-        if (!plugin.getDataFolder().exists()) plugin.getDataFolder().mkdirs();
-        homesFile = new File(plugin.getDataFolder(), "homes.yml");
-        if (!homesFile.exists()) {
-            try { homesFile.createNewFile(); } catch (IOException e) { e.printStackTrace(); }
+        this.file = new File(plugin.getDataFolder(), "homes.yml");
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        homesConfig = YamlConfiguration.loadConfiguration(homesFile);
+        this.config = YamlConfiguration.loadConfiguration(file);
     }
 
-    public void setHome(Player p, String name, Location loc) {
-        String path = p.getUniqueId() + "." + name;
-        homesConfig.set(path + ".world", loc.getWorld().getName());
-        homesConfig.set(path + ".x", loc.getX());
-        homesConfig.set(path + ".y", loc.getY());
-        homesConfig.set(path + ".z", loc.getZ());
-        homesConfig.set(path + ".yaw", loc.getYaw());
-        homesConfig.set(path + ".pitch", loc.getPitch());
-        homesConfig.set(path + ".icon", "RED_BED");
+    /**
+     * GUIManager'ın hata vermesine sebep olan kritik metod.
+     * Oyuncunun sahip olduğu evlerin isimlerini liste olarak döndürür.
+     */
+    public List<String> getPlayerHomes(UUID uuid) {
+        if (config.getConfigurationSection(uuid.toString()) == null) {
+            return new ArrayList<>();
+        }
+        return new ArrayList<>(config.getConfigurationSection(uuid.toString()).getKeys(false));
+    }
+
+    public void setHome(UUID uuid, String homeName, Location loc) {
+        String path = uuid.toString() + "." + homeName;
+        config.set(path + ".world", loc.getWorld().getName());
+        config.set(path + ".x", loc.getX());
+        config.set(path + ".y", loc.getY());
+        config.set(path + ".z", loc.getZ());
+        config.set(path + ".yaw", (double) loc.getYaw());
+        config.set(path + ".pitch", (double) loc.getPitch());
         save();
     }
 
-    public Map<String, Location> getHomes(Player p) {
-        Map<String, Location> homes = new HashMap<>();
-        String uuid = p.getUniqueId().toString();
-        if (homesConfig.contains(uuid)) {
-            for (String key : homesConfig.getConfigurationSection(uuid).getKeys(false)) {
-                String path = uuid + "." + key;
-                homes.put(key, new Location(
-                        Bukkit.getWorld(homesConfig.getString(path + ".world")),
-                        homesConfig.getDouble(path + ".x"),
-                        homesConfig.getDouble(path + ".y"),
-                        homesConfig.getDouble(path + ".z"),
-                        (float) homesConfig.getDouble(path + ".yaw"),
-                        (float) homesConfig.getDouble(path + ".pitch")
-                ));
-            }
-        }
-        return homes;
-    }
-
-    public Material getHomeIcon(Player p, String name) {
-        String iconName = homesConfig.getString(p.getUniqueId() + "." + name + ".icon", "RED_BED");
-        Material mat = Material.matchMaterial(iconName);
-        return mat != null ? mat : Material.RED_BED;
-    }
-
-    public void deleteHome(Player p, String name) {
-        homesConfig.set(p.getUniqueId() + "." + name, null);
+    public void deleteHome(UUID uuid, String homeName) {
+        config.set(uuid.toString() + "." + homeName, null);
         save();
     }
 
-    private void save() {
-        try { homesConfig.save(homesFile); } catch (IOException e) { e.printStackTrace(); }
+    public Location getHome(UUID uuid, String homeName) {
+        String path = uuid.toString() + "." + homeName;
+        if (config.get(path) == null) return null;
+
+        return new Location(
+                Bukkit.getWorld(config.getString(path + ".world")),
+                config.getDouble(path + ".x"),
+                config.getDouble(path + ".y"),
+                config.getDouble(path + ".z"),
+                (float) config.getDouble(path + ".yaw"),
+                (float) config.getDouble(path + ".pitch")
+        );
     }
-            }
+
+    public boolean exists(UUID uuid, String homeName) {
+        return config.contains(uuid.toString() + "." + homeName);
+    }
+
+    public int getHomeCount(UUID uuid) {
+        return getPlayerHomes(uuid).size();
+    }
+
+    public void save() {
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void reload() {
+        this.config = YamlConfiguration.loadConfiguration(file);
+    }
+}
