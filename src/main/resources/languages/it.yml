@@ -1,0 +1,26 @@
+gui:
+  title: "<gradient:#4facfe:#00f2fe>Lista Case</gradient> <gray>(Pag: {page})"
+  home-lore: "<gray>Clicca per gestire"
+  prev-page: "<yellow>« Pagina Precedente"
+  next-page: "<yellow>Pagina Successiva »"
+
+confirm-gui:
+  title: "<red>Elimina {home}?"
+  yes-name: "<green>SÌ, ELIMINA"
+  yes-lore: "<gray>Non può essere annullato!"
+  no-name: "<red>NO, ANNULLA"
+  no-lore: "<gray>Torna al menu"
+
+selection-menu:
+  title: "<gray>Gestisci: <white>{home}"
+  teleport-name: "<green>Teletrasporta"
+  delete-name: "<red>Elimina Casa"
+
+messages:
+  prefix: "<gradient:#4facfe:#00f2fe>[HT-Homes+]</gradient> "
+  home-set: "<gray>Casa <white>{home} <gray>impostata!"
+  home-deleted: "<red>{home} <gray>eliminata."
+  teleporting: "<gray>Teletrasporto... <white>{time}s"
+  teleport-success: "<gray>Teletrasportato a <white>{home}<gray>."
+  unsafe-area: "<red>Errore! <gray>Zona protetta."
+  no-permission: "<red>Errore! <gray>Permesso negato."
