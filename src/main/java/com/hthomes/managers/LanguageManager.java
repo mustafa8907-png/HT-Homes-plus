@@ -32,8 +32,13 @@ public class LanguageManager {
         }
     }
 
+    // Fix: Added missing method required by HTHomes class
+    public FileConfiguration getLangConfig() {
+        return langCache.getOrDefault(currentLang, langCache.get("en"));
+    }
+
     public String getRaw(String path) {
-        FileConfiguration conf = langCache.getOrDefault(currentLang, langCache.get("en"));
+        FileConfiguration conf = getLangConfig();
         return conf != null ? conf.getString(path, "§cPath not found: " + path) : "§cLang file missing!";
     }
 
@@ -46,4 +51,4 @@ public class LanguageManager {
         }
         plugin.getAdventure().player(p).sendMessage(MessageUtils.parse(p, msg));
     }
-}
+        }
