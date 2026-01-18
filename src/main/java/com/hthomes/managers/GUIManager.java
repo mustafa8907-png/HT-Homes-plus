@@ -14,17 +14,9 @@ public class GUIManager {
     private static HTHomes plugin;
     public static void setPlugin(HTHomes p) { plugin = p; }
 
-    public static void openHomeList(Player player, int page) {
-        String titleRaw = plugin.getLangManager().getRaw("gui.title").replace("{page}", String.valueOf(page));
-        // FIX: 27 slots = 3 rows as requested. parseToLegacy used for title gradients.
-        Inventory gui = Bukkit.createInventory(null, 27, MessageUtils.parseToLegacy(player, titleRaw));
-
-        // Background filler (Optional)
-        for (int i = 0; i < 27; i++) {
-            gui.setItem(i, createItem(Material.GRAY_STAINED_GLASS_PANE, " ", ""));
-        }
-
-        player.openInventory(gui);
+    // HATA ÇÖZÜMÜ: GUIListener'ın aradığı eski metod ismini buraya yönlendiriyoruz
+    public static void openSelection(Player p, String homeName) {
+        openSelectionMenu(p, homeName);
     }
 
     public static void openSelectionMenu(Player p, String homeName) {
@@ -40,8 +32,14 @@ public class GUIManager {
         p.openInventory(inv);
     }
 
+    // Diğer metodların (openHomeList, openConfirmDelete, createItem) aynen kalabilir...
+    public static void openHomeList(Player player, int page) {
+        String titleRaw = plugin.getLangManager().getRaw("gui.title").replace("{page}", String.valueOf(page));
+        Inventory gui = Bukkit.createInventory(null, 27, MessageUtils.parseToLegacy(player, titleRaw));
+        player.openInventory(gui);
+    }
+
     public static void openConfirmDelete(Player p, String homeName) {
-        // Fix: Use parseToLegacy for gradient title support
         String title = MessageUtils.parseToLegacy(p, plugin.getLangManager().getRaw("confirm-gui.title").replace("{home}", homeName));
         Inventory inv = Bukkit.createInventory(null, 27, title);
 
@@ -58,7 +56,6 @@ public class GUIManager {
         ItemStack i = new ItemStack(m != null ? m : Material.STONE);
         ItemMeta mt = i.getItemMeta();
         if (mt != null) {
-            // Fix: Using MessageUtils.color to handle gradient names and lore
             mt.setDisplayName(MessageUtils.color(n));
             if (l != null && !l.isEmpty()) {
                 mt.setLore(Collections.singletonList(MessageUtils.color(l)));
