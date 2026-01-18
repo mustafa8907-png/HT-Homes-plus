@@ -1,21 +1,27 @@
+# HT-Homes+ English Language File
 gui:
-  title: "&8Home List | Page {page}"
-  next-page: "&eNext Page ->"
-  prev-page: "&e<- Previous Page"
-  set-home-name: "&c&l+ Create Home"
-  set-home-lore: "&7Click to save current location"
-  home-lore: "&7Click to manage this home"
+  title: "<gradient:#4facfe:#00f2fe>Home List</gradient> <gray>(Page: {page})"
+  home-lore: "<gray>Click to manage"
+  prev-page: "<yellow>« Previous Page"
+  next-page: "<yellow>Next Page »"
+
+confirm-gui:
+  title: "<red>Delete {home}?"
+  yes-name: "<green>YES, DELETE"
+  yes-lore: "<gray>This cannot be undone!"
+  no-name: "<red>NO, CANCEL"
+  no-lore: "<gray>Back to menu"
+
 selection-menu:
-  title: "&8Manage: {home}"
-  teleport-name: "&a&lTeleport"
-  teleport-lore: "&7Click to travel"
-  delete-name: "&c&lDelete"
-  delete-lore: "&7Click to remove"
-  back-name: "&c&lBack"
+  title: "<gray>Manage: <white>{home}"
+  teleport-name: "<green>Teleport"
+  delete-name: "<red>Delete Home"
+
 messages:
-  prefix: "&8[&6HT-Homes&8] &r"
-  teleporting: "&eTeleporting in &c{time}&es..."
-  teleport-success: "&aArrived at &f{home}&a!"
-  teleport-cancelled: "&cTeleport cancelled (you moved)!"
-  home-set: "&aHome &f{home} &aset!"
-  home-deleted: "&cHome &f{home} &adeleted!"
+  prefix: "<gradient:#4facfe:#00f2fe>[HT-Homes+]</gradient> "
+  home-set: "<white>{home} <gray>has been set!"
+  home-deleted: "<red>{home} <gray>has been deleted."
+  teleporting: "<gray>Teleporting... <white>{time}s"
+  teleport-success: "<gray>Teleported to <white>{home}<gray>."
+  unsafe-area: "<red>Error! <gray>This area is protected."
+  no-permission: "<red>Error! <gray>No permission."
