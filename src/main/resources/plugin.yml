@@ -4,7 +4,7 @@ main: com.hthomes.HTHomes
 api-version: 1.20
 author: mustata8907
 website: https://github.com/mustafa8907-png/HT-Homes-plus
-description: Ücretsiz ve gelişmiş ev yönetim eklentisi.
+description: Free Advanced Home Plugin.
 
 commands:
   home:
