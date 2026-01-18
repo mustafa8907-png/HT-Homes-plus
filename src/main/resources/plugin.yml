@@ -1,28 +1,41 @@
 name: HT-Homes
-version: 4.0.0
+version: 5.1.0
 main: com.hthomes.HTHomes
 api-version: 1.20
-author: mustafa8907
-description: A professional GUI-based home management system with Geyser support.
+author: mustata8907
+website: https://github.com/mustafa8907-png/HT-Homes-plus
+description: Ücretsiz ve gelişmiş ev yönetim eklentisi.
 
 commands:
   home:
-    description: Open the home list menu.
-    usage: /home
-    aliases: [homes]
-    permission: hthomes.use
+    description: Ana ev menüsünü açar.
+    aliases: [homes, hthomes, ev]
+    permission: hthomes.user.home
   sethome:
-    description: Create a new home.
-    usage: /sethome <name>
-    permission: hthomes.use
+    description: Yeni bir ev noktası oluşturur.
+    aliases: [evayarla, evçek]
+    permission: hthomes.user.sethome
+  delhome:
+    description: Mevcut bir evi siler.
+    aliases: [evsil]
+    permission: hthomes.user.delhome
 
 permissions:
-  hthomes.use:
-    description: Allows players to use the home system.
+  hthomes.user.*:
+    description: Tüm kullanıcı yetkilerini verir.
+    children:
+      hthomes.user.home: true
+      hthomes.user.sethome: true
+      hthomes.user.delhome: true
+  hthomes.user.home:
+    description: Ev menüsünü açma yetkisi.
+    default: true
+  hthomes.user.sethome:
+    description: Ev kurma yetkisi.
+    default: true
+  hthomes.user.delhome:
+    description: Ev silme yetkisi.
     default: true
   hthomes.admin:
-    description: Allows admin operations.
+    description: Admin yetkileri (İleride eklenecek reload vb. için).
     default: op
-  hthomes.limit.default:
-    description: Default home limit.
-    default: true
