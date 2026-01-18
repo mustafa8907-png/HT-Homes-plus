@@ -2,155 +2,74 @@ package com.hthomes.listeners;
 
 import com.hthomes.HTHomes;
 import com.hthomes.managers.GUIManager;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
+import com.hthomes.utils.MessageUtils;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import java.util.Map;
 
 public class GUIListener implements Listener {
     private final HTHomes plugin;
-
     public GUIListener(HTHomes plugin) { this.plugin = plugin; }
 
     @EventHandler
-    public void onInventoryClick(InventoryClickEvent e) {
-        if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR) return;
-
+    public void onClick(InventoryClickEvent e) {
+        if (e.getCurrentItem() == null) return;
         Player p = (Player) e.getWhoClicked();
         String title = e.getView().getTitle();
-        FileConfiguration config = plugin.getConfig();
-        String disp = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
 
-        // 1. ANA LİSTE MENÜSÜ
-        if (title.contains("Homes")) {
+        if (title.contains("Ev Listesi")) {
             e.setCancelled(true);
-            int page = 1; 
-            try { page = Integer.parseInt(title.replaceAll("[^0-9]", "")); } catch (Exception ignored) {}
-
-            String next = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', config.getString("gui.next-page", "Next")));
-            String prev = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', config.getString("gui.prev-page", "Previous")));
-
-            if (disp.contains(next)) { GUIManager.openHomeList(p, page + 1); return; }
-            if (disp.contains(prev)) { GUIManager.openHomeList(p, page - 1); return; }
-
-            Material setMat = Material.matchMaterial(config.getString("gui.set-home-icon", "RED_BED"));
-            if (e.getCurrentItem().getType() == setMat) {
+            if (e.getCurrentItem().getType() != Material.ARROW) {
+                String name = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
+                GUIManager.openSelection(p, name);
+            }
+        } else if (title.contains("Yönet:")) {
+            e.setCancelled(true);
+            String name = title.split(": ")[1];
+            if (e.getCurrentItem().getType() == Material.ENDER_PEARL) {
                 p.closeInventory();
-                int num = plugin.getHomeManager().getHomes(p).size() + 1;
-                plugin.getHomeManager().setHome(p, "Home-" + num, p.getLocation());
-                p.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getString("messages.home-set", "&aHome set!").replace("{home}", "Home-" + num)));
-                return;
+                teleportPlayer(p, name);
+            } else if (e.getCurrentItem().getType() == Material.BARRIER) {
+                GUIManager.openConfirmDelete(p, name);
             }
-
-            // Ev İkonuna Tıklayınca Yönetimi Aç
-            if (e.getCurrentItem().getItemMeta().hasDisplayName()) {
-                GUIManager.openSelection(p, disp);
-            }
-        }
-
-        // 2. YÖNETİM MENÜSÜ
-        else if (title.startsWith("Manage: ")) {
+        } else if (title.contains("Sil:")) {
             e.setCancelled(true);
-            String homeName = title.replace("Manage: ", "").trim();
-            Material type = e.getCurrentItem().getType();
-
-            Material tpMat = Material.matchMaterial(config.getString("selection-menu.teleport-icon", "ENDER_PEARL"));
-            if (type == tpMat) {
+            String name = title.split(": ")[1];
+            if (e.getCurrentItem().getType() == Material.LIME_STAINED_GLASS_PANE) {
+                plugin.getHomeManager().deleteHome(p, name);
+                plugin.getLangManager().sendMessage(p, "messages.home-deleted", Map.of("{home}", name));
                 p.closeInventory();
-                Location loc = plugin.getHomeManager().getHomes(p).get(homeName);
-                if (loc != null) startTeleport(p, loc, homeName);
-                return;
-            }
-
-            // YENİ: İkon Değiştir Butonu
-            if (type == Material.PAINTING) {
-                GUIManager.openIconSelection(p, homeName);
-                return;
-            }
-
-            Material delMat = Material.matchMaterial(config.getString("selection-menu.delete-icon", "SKELETON_SKULL"));
-            if (type == delMat) {
-                plugin.getHomeManager().deleteHome(p, homeName);
-                p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1f, 1f);
-                GUIManager.openHomeList(p, 1);
-                return;
-            }
-
-            Material backMat = Material.matchMaterial(config.getString("selection-menu.back-icon", "BARRIER"));
-            if (type == backMat) {
-                GUIManager.openHomeList(p, 1);
-            }
-        }
-
-        // 3. YENİ: İKON SEÇİM MENÜSÜ
-        else if (title.startsWith("Select Icon: ")) {
-            e.setCancelled(true);
-            String homeName = title.replace("Select Icon: ", "").trim();
-
-            if (e.getCurrentItem().getType() == Material.BARRIER) {
-                GUIManager.openSelection(p, homeName);
-            } else {
-                // Seçilen ikonu kaydet
-                plugin.getHomeManager().setHomeIcon(p, homeName, e.getCurrentItem().getType());
-                p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
-                p.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getString("messages.icon-changed", "&aIcon changed!")));
-                GUIManager.openHomeList(p, 1);
+            } else if (e.getCurrentItem().getType() == Material.RED_STAINED_GLASS_PANE) {
+                GUIManager.openSelection(p, name);
             }
         }
     }
 
-    // GÜNCELLENMİŞ: Action Bar Destekli Işınlanma
-    private void startTeleport(Player p, Location loc, String homeName) {
-        FileConfiguration config = plugin.getConfig();
-        int delay = config.getInt("teleport.delay", 3);
-        boolean useActionBar = config.getBoolean("teleport.use-action-bar", true);
-        String prefix = ChatColor.translateAlternateColorCodes('&', config.getString("messages.prefix", "&8[&aHomes&8] "));
-
-        if (p.hasPermission("hthomes.bypass.delay")) delay = 0;
-
-        if (delay <= 0) {
-            p.teleport(loc);
-            p.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', config.getString("messages.teleport-success", "&aTeleported!").replace("{home}", homeName)));
+    private void teleportPlayer(Player p, String homeName) {
+        org.bukkit.Location loc = plugin.getHomeManager().getHomes(p).get(homeName);
+        if (!plugin.getHookManager().canBuild(p, loc)) {
+            plugin.getLangManager().sendMessage(p, "messages.unsafe-area", null);
             return;
         }
-
-        Location startLoc = p.getLocation();
-        p.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', config.getString("messages.teleport-starting", "&aTeleporting... Don't move!")));
-
+        int delay = plugin.getConfig().getInt("teleport.delay", 3);
         new BukkitRunnable() {
-            int time = config.getInt("teleport.delay", 3);
+            int count = delay;
             @Override
             public void run() {
-                if (!p.isOnline()) { this.cancel(); return; }
-                
-                // Hareket Kontrolü
-                if (startLoc.distance(p.getLocation()) > 0.5) {
-                    p.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', config.getString("messages.teleport-cancelled", "&cCancelled!")));
-                    if (useActionBar) p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§c❌ MOVED!"));
-                    this.cancel();
-                    return;
-                }
-
-                if (time <= 0) {
+                if (count <= 0) {
                     p.teleport(loc);
-                    p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1f);
-                    p.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', config.getString("messages.teleport-success", "&aArrived!").replace("{home}", homeName)));
-                    if (useActionBar) p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§a✔ WELCOME HOME!"));
-                    this.cancel();
+                    plugin.getLangManager().sendMessage(p, "messages.teleport-success", Map.of("{home}", homeName));
+                    cancel();
                 } else {
-                    if (useActionBar) p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§eTeleporting in: §6" + time));
-                    p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 2f);
-                    time--;
+                    plugin.getAdventure().player(p).sendActionBar(MessageUtils.parse(p, plugin.getLangManager().getRaw("messages.teleporting").replace("{time}", String.valueOf(count))));
+                    count--;
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(plugin, 0, 20);
     }
 }
