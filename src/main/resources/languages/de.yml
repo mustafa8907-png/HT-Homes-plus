@@ -1,21 +1,27 @@
+# HT-Homes+ German Language File
 gui:
-  title: "&8Hausliste | Seite {page}"
-  next-page: "&eNächste Seite ->"
-  prev-page: "&e<- Vorherige Seite"
-  set-home-name: "&c&l+ Haus erstellen"
-  set-home-lore: "&7Klicken, um Position zu speichern"
-  home-lore: "&7Klicken zum Verwalten"
+  title: "<gradient:#ff0844:#ffb199>Hausliste</gradient> <gray>(Seite: {page})"
+  home-lore: "<gray>Klicken zum Verwalten"
+  prev-page: "<yellow>« Vorherige Seite"
+  next-page: "<yellow>Nächste Seite »"
+
+confirm-gui:
+  title: "<red>{home} löschen?"
+  yes-name: "<green>JA, LÖSCHEN"
+  yes-lore: "<gray>Dies kann nicht rückgängig gemacht werden!"
+  no-name: "<red>NEIN, ABBRECHEN"
+  no-lore: "<gray>Zurück zum Menü"
+
 selection-menu:
-  title: "&8Verwalten: {home}"
-  teleport-name: "&a&lTeleportieren"
-  teleport-lore: "&7Klicken zum Reisen"
-  delete-name: "&c&lLöschen"
-  delete-lore: "&7Dauerhaft entfernen"
-  back-name: "&c&lZurück"
+  title: "<gray>Verwalten: <white>{home}"
+  teleport-name: "<green>Teleportieren"
+  delete-name: "<red>Haus löschen"
+
 messages:
-  prefix: "&8[&6HT-Homes&8] &r"
-  teleporting: "&eTeleportation in &c{time}&es..."
-  teleport-success: "&aBei &f{home} &aangekommen!"
-  teleport-cancelled: "&cTeleport abgebrochen!"
-  home-set: "&aHaus &f{home} &agesetzt!"
-  home-deleted: "&cHaus &f{home} &agelöscht!"
+  prefix: "<gradient:#ff0844:#ffb199>[HT-Homes+]</gradient> "
+  home-set: "<white>{home} <gray>wurde gesetzt!"
+  home-deleted: "<red>{home} <gray>wurde gelöscht."
+  teleporting: "<gray>Teleportieren... <white>{time}s"
+  teleport-success: "<gray>Erfolgreich zu <white>{home} <gray>teleportiert."
+  unsafe-area: "<red>Fehler! <gray>Dieses Gebiet ist geschützt."
+  no-permission: "<red>Fehler! <gray>Keine Berechtigung."
