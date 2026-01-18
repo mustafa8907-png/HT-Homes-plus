@@ -1,6 +1,7 @@
 package com.hthomes.managers;
 
 import com.hthomes.HTHomes;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -11,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class HomeManager {
     private final HTHomes plugin;
@@ -22,7 +24,8 @@ public class HomeManager {
         setup();
     }
 
-    public void setup() {
+    private void setup() {
+        if (!plugin.getDataFolder().exists()) plugin.getDataFolder().mkdirs();
         homesFile = new File(plugin.getDataFolder(), "homes.yml");
         if (!homesFile.exists()) {
             try { homesFile.createNewFile(); } catch (IOException e) { e.printStackTrace(); }
@@ -30,7 +33,6 @@ public class HomeManager {
         homesConfig = YamlConfiguration.loadConfiguration(homesFile);
     }
 
-    // Ev Kaydetme
     public void setHome(Player p, String name, Location loc) {
         String path = p.getUniqueId() + "." + name;
         homesConfig.set(path + ".world", loc.getWorld().getName());
@@ -39,46 +41,33 @@ public class HomeManager {
         homesConfig.set(path + ".z", loc.getZ());
         homesConfig.set(path + ".yaw", loc.getYaw());
         homesConfig.set(path + ".pitch", loc.getPitch());
-        // Varsayılan ikon
-        if (!homesConfig.contains(path + ".icon")) {
-            homesConfig.set(path + ".icon", "LIME_BED"); 
-        }
+        homesConfig.set(path + ".icon", "RED_BED");
         save();
     }
 
-    // YENİ: İkon Kaydetme
-    public void setHomeIcon(Player p, String name, Material mat) {
-        homesConfig.set(p.getUniqueId() + "." + name + ".icon", mat.name());
-        save();
-    }
-
-    // YENİ: İkon Okuma
-    public Material getHomeIcon(Player p, String name) {
-        String matName = homesConfig.getString(p.getUniqueId() + "." + name + ".icon");
-        if (matName == null) return Material.LIME_BED; // Hata olursa varsayılan
-        return Material.matchMaterial(matName) != null ? Material.matchMaterial(matName) : Material.LIME_BED;
-    }
-
-    // Evleri Listeleme
     public Map<String, Location> getHomes(Player p) {
         Map<String, Location> homes = new HashMap<>();
-        if (homesConfig.contains(p.getUniqueId().toString())) {
-            for (String key : homesConfig.getConfigurationSection(p.getUniqueId().toString()).getKeys(false)) {
-                String path = p.getUniqueId() + "." + key;
-                if (homesConfig.getString(path + ".world") == null) continue; // Hatalı veriyi atla
-                
-                Location loc = new Location(
-                        plugin.getServer().getWorld(homesConfig.getString(path + ".world")),
+        String uuid = p.getUniqueId().toString();
+        if (homesConfig.contains(uuid)) {
+            for (String key : homesConfig.getConfigurationSection(uuid).getKeys(false)) {
+                String path = uuid + "." + key;
+                homes.put(key, new Location(
+                        Bukkit.getWorld(homesConfig.getString(path + ".world")),
                         homesConfig.getDouble(path + ".x"),
                         homesConfig.getDouble(path + ".y"),
                         homesConfig.getDouble(path + ".z"),
                         (float) homesConfig.getDouble(path + ".yaw"),
                         (float) homesConfig.getDouble(path + ".pitch")
-                );
-                homes.put(key, loc);
+                ));
             }
         }
         return homes;
+    }
+
+    public Material getHomeIcon(Player p, String name) {
+        String iconName = homesConfig.getString(p.getUniqueId() + "." + name + ".icon", "RED_BED");
+        Material mat = Material.matchMaterial(iconName);
+        return mat != null ? mat : Material.RED_BED;
     }
 
     public void deleteHome(Player p, String name) {
@@ -86,6 +75,7 @@ public class HomeManager {
         save();
     }
 
-    public void save() { try { homesConfig.save(homesFile); } catch (IOException e) { e.printStackTrace(); } }
-    public FileConfiguration getHomesConfig() { return homesConfig; }
+    private void save() {
+        try { homesConfig.save(homesFile); } catch (IOException e) { e.printStackTrace(); }
+    }
             }
