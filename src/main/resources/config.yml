@@ -1,65 +1,53 @@
-# HT-Homes+ Configuration
-# Developer: mustafa8907
-# Version: 4.1.0
+# ==========================================================
+#                  HT-Homes+ Configuration
+#              Developed by mustata8907
+# ==========================================================
 
-# Selected language file from languages/ folder (e.g., tr, en, ru, fr)
-language: "en"
+# The language file to be used (from the languages/ folder)
+# Available options: tr, en, de, fr, es, ru, ko, ja, etc.
+language: "tr"
 
-# --- GUI Settings ---
-gui:
-  # {page} will be replaced with current page number
-  title: "&8Homes (Page: {page})"
-  home-lore: "&7Click to manage your home."
-  
-  # Icons for empty slots
-  set-home-name: "&cEmpty Slot"
-  set-home-lore: "&7Click to set a new home here."
-  set-home-icon: "RED_BED"
-  
-  # Navigation buttons
-  next-page: "&eNext Page &7»"
-  prev-page: "&7« &ePrevious Page"
-
-# --- Teleport Settings ---
+# --- Teleportation Settings ---
 teleport:
-  # Delay in seconds before teleporting (0 for instant)
+  # Delay before teleportation (in seconds)
   delay: 3
-  # Use the action bar for the countdown timer
+  # Show the countdown on the Action Bar (above the hotbar)
   use-action-bar: true
-  # Cancel teleport if the player moves more than 0.5 blocks
+  # Cancel teleportation if the player moves
   cancel-on-move: true
 
-# --- Management Menu Settings ---
+# --- Protection & Hook Settings ---
+# These features will auto-disable if WorldGuard or GriefPrevention is not installed.
+hooks:
+  # Prevent players from setting homes inside someone else's claim or protected region
+  prevent-sethome-in-claims: true
+  
+  # Prevent teleportation if the player no longer has build access at the home location
+  # (Useful for preventing unauthorized access to expired claims or admin zones)
+  prevent-teleport-to-unsafe: true
+
+# --- GUI (Menu) Icon Settings ---
+# Use official Minecraft Material names (e.g., RED_BED, ENDER_PEARL)
 selection-menu:
-  # Teleport Button
+  # Icon for the teleport button
   teleport-icon: "ENDER_PEARL"
-  teleport-name: "&aTeleport"
-  teleport-lore: "&7Click to travel to this home."
-  
-  # New: Change Icon Button
-  change-icon: "PAINTING"
-  change-name: "&eChange Icon"
-  change-lore: "&7Customize your home's appearance."
-  
-  # Delete Button
+  # Icon for the delete button
   delete-icon: "SKELETON_SKULL"
-  delete-name: "&cDelete Home"
-  delete-lore: "&7This will permanently remove the home."
-  
-  # Back Button
+  # Icon for the change icon button
+  change-icon: "PAINTING"
+  # Icon for the back/close button
   back-icon: "BARRIER"
-  back-name: "&cBack to List"
 
-# --- Home Limit Settings (LuckPerms Compatible) ---
-# Use permission node: hthomes.limit.<group_name>
-groups:
-  default: 3
-  vip: 5
-  mvp: 10
-  admin: 100
+# --- Advanced GUI Settings ---
+gui:
+  # Item used to fill empty slots in the menu
+  filler-item: "GRAY_STAINED_GLASS_PANE"
+  # Default icon for new homes
+  default-home-icon: "LIME_BED"
 
-# --- Advanced Options ---
-# Should the plugin check for updates on startup?
-check-updates: true
-# Debug mode for developer use
-debug: false
+# --- Plugin Integration ---
+# Enable/Disable PlaceholderAPI support
+use-placeholder-api: true
+
+# Enable/Disable colored text in console logs
+console-colors: true
