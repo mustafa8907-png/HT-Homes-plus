@@ -20,8 +20,10 @@ public class LanguageManager {
         loadLanguages();
     }
 
-    public void loadLanguages() {
+    private void loadLanguages() {
         File folder = new File(plugin.getDataFolder(), "languages");
+        if (!folder.exists()) folder.mkdirs();
+        
         File[] files = folder.listFiles();
         if (files != null) {
             for (File f : files) {
@@ -32,14 +34,15 @@ public class LanguageManager {
         }
     }
 
-    // Fix: Added missing method required by HTHomes class
+    // Fixed: Added missing method
     public FileConfiguration getLangConfig() {
         return langCache.getOrDefault(currentLang, langCache.get("en"));
     }
 
     public String getRaw(String path) {
-        FileConfiguration conf = getLangConfig();
-        return conf != null ? conf.getString(path, "§cPath not found: " + path) : "§cLang file missing!";
+        FileConfiguration config = getLangConfig();
+        if (config == null) return "Error: Lang file not found";
+        return config.getString(path, "Missing: " + path);
     }
 
     public void sendMessage(Player p, String path, Map<String, String> placeholders) {
@@ -49,6 +52,7 @@ public class LanguageManager {
                 msg = msg.replace(e.getKey(), e.getValue());
             }
         }
+        // Use Adventure Audience to send MiniMessage component
         plugin.getAdventure().player(p).sendMessage(MessageUtils.parse(p, msg));
     }
-        }
+}
