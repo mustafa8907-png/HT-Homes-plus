@@ -2,85 +2,43 @@ package com.hthomes.commands;
 
 import com.hthomes.HTHomes;
 import com.hthomes.managers.GUIManager;
+import com.hthomes.utils.MessageUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import java.util.Map;
 
 public class HomeCommand implements CommandExecutor {
     private final HTHomes plugin;
-
-    public HomeCommand(HTHomes plugin) {
-        this.plugin = plugin;
-    }
+    public HomeCommand(HTHomes plugin) { this.plugin = plugin; }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage("Bu komut sadece oyuncular içindir!");
-            return true;
-        }
-        
-        Player p = (Player) sender;
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player p)) return true;
 
-        // /home - /ev
-        if (cmd.getName().equalsIgnoreCase("home")) {
-            if (!p.hasPermission("hthomes.user.home")) {
-                noPerm(p);
-                return true;
-            }
-            GUIManager.openHomeList(p, 1);
+        if (label.equalsIgnoreCase("sethome")) {
+            String name = args.length > 0 ? args[0] : "Ev-1";
+            plugin.getHomeManager().setHome(p.getUniqueId(), name, p.getLocation());
+            p.sendMessage(MessageUtils.color("&a" + name + " kaydedildi!"));
             return true;
         }
 
-        // /sethome - /evayarla
-        if (cmd.getName().equalsIgnoreCase("sethome")) {
-            if (!p.hasPermission("hthomes.user.sethome")) {
-                noPerm(p);
-                return true;
-            }
-            if (args.length == 0) {
-                p.sendMessage("§cKullanım: /" + label + " <isim>");
-                return true;
-            }
-            
-            String name = args[0];
-            if (!plugin.getHookManager().canBuild(p, p.getLocation())) {
-                plugin.getLangManager().sendMessage(p, "messages.unsafe-area", null);
-                return true;
-            }
-
-            plugin.getHomeManager().setHome(p, name, p.getLocation());
-            plugin.getLangManager().sendMessage(p, "messages.home-set", Map.of("{home}", name));
+        if (label.equalsIgnoreCase("delhome") && args.length > 0) {
+            plugin.getHomeManager().deleteHome(p.getUniqueId(), args[0]);
+            p.sendMessage(MessageUtils.color("&c" + args[0] + " silindi."));
             return true;
         }
 
-        // /delhome - /evsil
-        if (cmd.getName().equalsIgnoreCase("delhome")) {
-            if (!p.hasPermission("hthomes.user.delhome")) {
-                noPerm(p);
-                return true;
-            }
-            if (args.length == 0) {
-                p.sendMessage("§cKullanım: /" + label + " <isim>");
-                return true;
-            }
-            String name = args[0];
-            if (plugin.getHomeManager().getHomes(p).containsKey(name)) {
-                plugin.getHomeManager().deleteHome(p, name);
-                plugin.getLangManager().sendMessage(p, "messages.home-deleted", Map.of("{home}", name));
-            } else {
-                p.sendMessage("§cEv bulunamadı.");
+        if (label.equalsIgnoreCase("home") && args.length > 0) {
+            if (plugin.getHomeManager().exists(p.getUniqueId(), args[0])) {
+                p.teleport(plugin.getHomeManager().getHome(p.getUniqueId(), args[0]));
+                p.sendMessage(MessageUtils.color("&aIşınlandın!"));
             }
             return true;
         }
 
+        GUIManager.openHomeList(p);
         return true;
-    }
-
-    private void noPerm(Player p) {
-        // Dil dosyasından "no-permission" mesajını çeker
-        plugin.getLangManager().sendMessage(p, "messages.no-permission", null);
+ 
     }
     }
