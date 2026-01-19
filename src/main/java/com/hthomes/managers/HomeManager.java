@@ -5,7 +5,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,74 +19,42 @@ public class HomeManager {
     public HomeManager(HTHomes plugin) {
         this.plugin = plugin;
         this.file = new File(plugin.getDataFolder(), "homes.yml");
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
         this.config = YamlConfiguration.loadConfiguration(file);
     }
 
-    /**
-     * GUIManager'ın hata vermesine sebep olan kritik metod.
-     * Oyuncunun sahip olduğu evlerin isimlerini liste olarak döndürür.
-     */
-    public List<String> getPlayerHomes(UUID uuid) {
-        if (config.getConfigurationSection(uuid.toString()) == null) {
-            return new ArrayList<>();
-        }
-        return new ArrayList<>(config.getConfigurationSection(uuid.toString()).getKeys(false));
+    public boolean exists(UUID uuid, String name) {
+        return config.contains(uuid.toString() + "." + name);
     }
 
-    public void setHome(UUID uuid, String homeName, Location loc) {
-        String path = uuid.toString() + "." + homeName;
+    public void setHome(UUID uuid, String name, Location loc) {
+        String path = uuid.toString() + "." + name;
         config.set(path + ".world", loc.getWorld().getName());
         config.set(path + ".x", loc.getX());
         config.set(path + ".y", loc.getY());
         config.set(path + ".z", loc.getZ());
-        config.set(path + ".yaw", (double) loc.getYaw());
-        config.set(path + ".pitch", (double) loc.getPitch());
+        config.set(path + ".yaw", loc.getYaw());
+        config.set(path + ".pitch", loc.getPitch());
         save();
     }
 
-    public void deleteHome(UUID uuid, String homeName) {
-        config.set(uuid.toString() + "." + homeName, null);
+    public Location getHome(UUID uuid, String name) {
+        String path = uuid.toString() + "." + name;
+        if (!config.contains(path)) return null;
+        return new Location(Bukkit.getWorld(config.getString(path + ".world")), 
+            config.getDouble(path + ".x"), config.getDouble(path + ".y"), config.getDouble(path + ".z"), 
+            (float) config.getDouble(path + ".yaw"), (float) config.getDouble(path + ".pitch"));
+    }
+
+    public void deleteHome(UUID uuid, String name) {
+        config.set(uuid.toString() + "." + name, null);
         save();
     }
 
-    public Location getHome(UUID uuid, String homeName) {
-        String path = uuid.toString() + "." + homeName;
-        if (config.get(path) == null) return null;
-
-        return new Location(
-                Bukkit.getWorld(config.getString(path + ".world")),
-                config.getDouble(path + ".x"),
-                config.getDouble(path + ".y"),
-                config.getDouble(path + ".z"),
-                (float) config.getDouble(path + ".yaw"),
-                (float) config.getDouble(path + ".pitch")
-        );
+    public List<String> getHomesList(UUID uuid) {
+        if (config.getConfigurationSection(uuid.toString()) == null) return new ArrayList<>();
+        return new ArrayList<>(config.getConfigurationSection(uuid.toString()).getKeys(false));
     }
 
-    public boolean exists(UUID uuid, String homeName) {
-        return config.contains(uuid.toString() + "." + homeName);
-    }
-
-    public int getHomeCount(UUID uuid) {
-        return getPlayerHomes(uuid).size();
-    }
-
-    public void save() {
-        try {
-            config.save(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void reload() {
-        this.config = YamlConfiguration.loadConfiguration(file);
-    }
-}
+    public void save() { try { config.save(file); } catch (IOException ignored
+                                                          ) {} }
+            }
