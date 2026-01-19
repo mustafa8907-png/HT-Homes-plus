@@ -15,21 +15,17 @@ public class GUIManager {
     public static void setPlugin(HTHomes p) { plugin = p; }
 
     public static void openHomeList(Player p) {
-        // Dil dosyasından başlığı çekiyoruz
         String title = plugin.getLangManager().getRaw(p, "gui.title");
         Inventory inv = Bukkit.createInventory(null, 27, MessageUtils.color(title));
         
         String clickTeleport = plugin.getLangManager().getRaw(p, "gui.click-teleport");
         String clickCreate = plugin.getLangManager().getRaw(p, "gui.click-create");
 
-        // 10'dan 16'ya kadar olan slotları doldur (Toplam 7 ev slotu)
         for (int i = 10; i <= 16; i++) {
             String homeName = "Ev-" + (i - 9);
             if (plugin.getHomeManager().exists(p.getUniqueId(), homeName)) {
-                // EV VARSA YEŞİL YATAK (Açıklama dilden geliyor)
                 inv.setItem(i, createItem(Material.LIME_BED, "&a" + homeName, clickTeleport));
             } else {
-                // EV YOKSA KIRMIZI YATAK (Açıklama dilden geliyor)
                 inv.setItem(i, createItem(Material.RED_BED, "&c" + homeName, clickCreate));
             }
         }
@@ -69,6 +65,5 @@ public class GUIManager {
             i.setItemMeta(mt);
         }
         return i;
-        
     }
-    }
+}
