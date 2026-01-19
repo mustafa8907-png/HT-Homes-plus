@@ -24,9 +24,11 @@ public class GUIManager {
         for (int i = 10; i <= 16; i++) {
             String homeName = "Ev-" + (i - 9);
             if (plugin.getHomeManager().exists(p.getUniqueId(), homeName)) {
-                inv.setItem(i, createItem(Material.LIME_BED, "&a" + homeName, clickTeleport));
+                // &a yerine <green> kullanarak MiniMessage hatasını önledik
+                inv.setItem(i, createItem(Material.LIME_BED, "<green>" + homeName, clickTeleport));
             } else {
-                inv.setItem(i, createItem(Material.RED_BED, "&c" + homeName, clickCreate));
+                // &c yerine <red> kullanarak MiniMessage hatasını önledik
+                inv.setItem(i, createItem(Material.RED_BED, "<red>" + homeName, clickCreate));
             }
         }
         p.openInventory(inv);
@@ -48,11 +50,8 @@ public class GUIManager {
         String title = plugin.getLangManager().getRaw(p, "confirm-gui.title").replace("{home}", homeName);
         Inventory inv = Bukkit.createInventory(null, 27, MessageUtils.color(title));
         
-        String yesName = plugin.getLangManager().getRaw(p, "confirm-gui.yes-name");
-        String noName = plugin.getLangManager().getRaw(p, "confirm-gui.no-name");
-
-        inv.setItem(11, createItem(Material.LIME_STAINED_GLASS_PANE, yesName, ""));
-        inv.setItem(15, createItem(Material.RED_STAINED_GLASS_PANE, noName, ""));
+        inv.setItem(11, createItem(Material.LIME_STAINED_GLASS_PANE, "<green>Onayla", ""));
+        inv.setItem(15, createItem(Material.RED_STAINED_GLASS_PANE, "<red>Vazgeç", ""));
         p.openInventory(inv);
     }
 
