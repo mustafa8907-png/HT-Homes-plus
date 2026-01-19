@@ -16,15 +16,11 @@ public class GUIManager {
 
     public static void openHomeList(Player p) {
         Inventory inv = Bukkit.createInventory(null, 27, MessageUtils.color("&8Ev Menüsü"));
-        
-        // 10'dan 16'ya kadar olan slotları doldur (Toplam 7 ev slotu)
         for (int i = 10; i <= 16; i++) {
             String homeName = "Ev-" + (i - 9);
             if (plugin.getHomeManager().exists(p.getUniqueId(), homeName)) {
-                // EV VARSA YEŞİL YATAK
                 inv.setItem(i, createItem(Material.LIME_BED, "&a" + homeName, "&7Işınlanmak için tıkla."));
             } else {
-                // EV YOKSA KIRMIZI YATAK
                 inv.setItem(i, createItem(Material.RED_BED, "&c" + homeName, "&7Buraya ev kurmak için tıkla."));
             }
         }
@@ -38,13 +34,22 @@ public class GUIManager {
         p.openInventory(inv);
     }
 
+    public static void openConfirmDelete(Player p, String homeName) {
+        Inventory inv = Bukkit.createInventory(null, 27, MessageUtils.color("&cSilme Onayı: " + homeName));
+        inv.setItem(11, createItem(Material.LIME_STAINED_GLASS_PANE, "&aOnayla", ""));
+        inv.setItem(15, createItem(Material.RED_STAINED_GLASS_PANE, "&cVazgeç", ""));
+        p.openInventory(inv);
+    }
+
     private static ItemStack createItem(Material m, String n, String l) {
         ItemStack i = new ItemStack(m != null ? m : Material.STONE);
         ItemMeta mt = i.getItemMeta();
-        mt.setDisplayName(MessageUtils.color(n));
-        if(!l.isEmpty()) mt.setLore(Collections.singletonList(MessageUtils.color(l)));
-        i.setItemMeta(mt);
+        if (mt != null) {
+            mt.setDisplayName(MessageUtils.color(n));
+            if(!l.isEmpty()) mt.setLore(Collections.singletonList(MessageUtils.color(l)));
+            i.setItemMeta(mt);
+        }
         return i;
-   
+  
     }
     }
