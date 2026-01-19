@@ -13,16 +13,16 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up JDK 17
+    - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
-        java-version: '17'
+        java-version: '21'
         distribution: 'temurin'
         cache: maven
 
     - name: Build with Maven
-      # -U bağımlılıkları günceller, -DskipTests süreci hızlandırır
-      run: mvn clean package -U -DskipTests
+      # -B batch mode (logları temiz tutar), -U zorla günceller, -DskipTests hızlandırır
+      run: mvn clean package -B -U -DskipTests
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
