@@ -11,7 +11,6 @@ public class TeleportManager {
     
     public static void teleportWithCountdown(Player player, Location loc) {
         HTHomes plugin = HTHomes.getInstance();
-        // Configden süreyi al, yoksa 3 saniye yap
         int delay = plugin.getConfig().getInt("teleport-delay", 3);
         
         new BukkitRunnable() {
@@ -20,46 +19,44 @@ public class TeleportManager {
             
             @Override
             public void run() {
-                // Oyuncu hareket ettiyse iptal et
+                // Hareket kontrolü
                 if (player.getLocation().distance(start) > 0.5) {
                     plugin.getLangManager().sendMessage(player, "messages.teleport-cancelled", null);
-                    // İptal sesi
+                    
                     String cancelSound = plugin.getConfig().getString("sounds.cancel", "BLOCK_NOTE_BLOCK_BASS");
-                    try {
-                        player.playSound(player.getLocation(), Sound.valueOf(cancelSound), 1f, 1f);
-                    } catch (Exception e) {}
+                    try { player.playSound(player.getLocation(), Sound.valueOf(cancelSound), 1f, 1f); } catch (Exception ignored) {}
+                    
                     this.cancel(); 
                     return;
                 }
                 
-                // Süre bitti, ışınla
+                // Süre tamamlandı
                 if (rem <= 0) {
                     player.teleport(loc);
-                    player.sendActionBar(MessageUtils.parse(player, plugin.getLangManager().getRaw(player, "messages.teleport-success")));
                     
-                    // Başarı sesi
+                    // Action Bar gönderimi (Hata veren yer burasıydı, Adventure API ile düzeltildi)
+                    String successMsg = plugin.getLangManager().getRaw(player, "messages.teleport-success");
+                    plugin.getAdventure().player(player).sendActionBar(MessageUtils.parse(player, successMsg));
+                    
                     String successSound = plugin.getConfig().getString("sounds.teleport", "ENTITY_ENDERMAN_TELEPORT");
-                    try {
-                        player.playSound(player.getLocation(), Sound.valueOf(successSound), 1f, 1f);
-                    } catch (Exception e) {}
+                    try { player.playSound(player.getLocation(), Sound.valueOf(successSound), 1f, 1f); } catch (Exception ignored) {}
                     
                     this.cancel(); 
                     return;
                 }
                 
-                // Geri sayım action bar
-                String msg = plugin.getLangManager().getRaw(player, "messages.teleporting-actionbar").replace("{time}", String.valueOf(rem));
-                player.sendActionBar(MessageUtils.parse(player, msg));
+                // Geri sayım devam ediyor
+                String msg = plugin.getLangManager().getRaw(player, "messages.teleporting-actionbar")
+                        .replace("{time}", String.valueOf(rem));
                 
-                // Tık sesi
+                // Action Bar gönderimi (Hata veren yer burasıydı, Adventure API ile düzeltildi)
+                plugin.getAdventure().player(player).sendActionBar(MessageUtils.parse(player, msg));
+                
                 String clickSound = plugin.getConfig().getString("sounds.click", "UI_BUTTON_CLICK");
-                try {
-                    player.playSound(player.getLocation(), Sound.valueOf(clickSound), 1f, 1f);
-                } catch (Exception e) {}
+                try { player.playSound(player.getLocation(), Sound.valueOf(clickSound), 1f, 1f); } catch (Exception ignored) {}
                 
                 rem--;
             }
         }.runTaskTimer(plugin, 0L, 20L);
     }
-
 }
