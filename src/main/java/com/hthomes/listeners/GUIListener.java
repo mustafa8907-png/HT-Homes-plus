@@ -2,7 +2,7 @@ package com.hthomes.listeners;
 
 import com.hthomes.HTHomes;
 import com.hthomes.managers.GUIManager;
-import com.hthomes.managers.TeleportManager;
+import com.hthomes.managers.TeleportManager; // IMPORT EKLENDİ
 import com.hthomes.utils.MessageUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -26,26 +26,20 @@ public class GUIListener implements Listener {
         String itemName = e.getCurrentItem().getItemMeta().getDisplayName();
         String cleanItemName = ChatColor.stripColor(itemName);
 
-        // GUI BAŞLIĞINI DİL DOSYASINDAN ALIP KONTROL EDİYORUZ
         String guiTitle = MessageUtils.color(plugin.getLangManager().getRaw(p, "gui.title"));
         
         if (title.equals(guiTitle)) {
             e.setCancelled(true);
             if (mat == Material.RED_BED) {
-                // KIRMIZI YATAK: EV KUR
                 plugin.getHomeManager().setHome(p.getUniqueId(), cleanItemName, p.getLocation());
                 p.closeInventory();
                 plugin.getLangManager().sendMessage(p, "messages.home-set", java.util.Map.of("{home}", cleanItemName));
             } else if (mat == Material.LIME_BED) {
-                // YEŞİL YATAK: YÖNET
                 GUIManager.openSelection(p, cleanItemName);
             }
         } 
-        
-        // YÖNETİM MENÜSÜ KONTROLÜ
         else if (title.contains(MessageUtils.color(plugin.getLangManager().getRaw(p, "selection-menu.title").split("\\{")[0]))) {
             e.setCancelled(true);
-            // Başlıktan ev ismini çekiyoruz (Örn: "Yönet: Ev-1" -> "Ev-1")
             String homeName = ChatColor.stripColor(title.substring(title.lastIndexOf(" ") + 1));
             
             String tpBtn = MessageUtils.color(plugin.getLangManager().getRaw(p, "selection-menu.teleport-name"));
@@ -58,8 +52,6 @@ public class GUIListener implements Listener {
                 GUIManager.openConfirmDelete(p, homeName);
             }
         }
-
-        // ONAY MENÜSÜ KONTROLÜ
         else if (title.contains(MessageUtils.color(plugin.getLangManager().getRaw(p, "confirm-gui.title").split("\\{")[0]))) {
             e.setCancelled(true);
             String homeName = ChatColor.stripColor(title.substring(title.lastIndexOf(" ") + 1));
@@ -74,6 +66,5 @@ public class GUIListener implements Listener {
                 GUIManager.openSelection(p, homeName);
             }
         }
-
-                                                    }
     }
+}
