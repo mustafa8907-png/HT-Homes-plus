@@ -19,8 +19,13 @@ public class LanguageManager {
     }
 
     public void loadLanguages() {
+        langCache.clear();
         File folder = new File(plugin.getDataFolder(), "languages");
         if (!folder.exists()) folder.mkdirs();
+        
+        File trFile = new File(folder, "tr.yml");
+        if (!trFile.exists()) plugin.saveResource("languages/tr.yml", false);
+
         File[] files = folder.listFiles();
         if (files != null) {
             for (File f : files) {
@@ -31,37 +36,21 @@ public class LanguageManager {
         }
     }
 
-    public FileConfiguration getConfigForPlayer(Player p) {
-        // Oyuncunun dilini al, yoksa varsayılanı kullan
-        String locale = "tr"; // Varsayılan TR yaptık, istersen p.getLocale() kullanabilirsin
-        if (p != null && p.getLocale() != null) {
-            locale = p.getLocale().split("_")[0].toLowerCase();
-        }
-        
-        if (langCache.containsKey(locale)) return langCache.get(locale);
-        
-        // Varsayılan dil configden
-        String defaultLang = plugin.getConfig().getString("default-lang", "tr");
-        return langCache.getOrDefault(defaultLang, langCache.values().stream().findFirst().orElse(null));
-    }
-
-    // İŞTE HATAYI ÇÖZEN KISIM: getRaw ARTIK PLAYER ALIYOR
     public String getRaw(Player p, String path) {
-        FileConfiguration config = getConfigForPlayer(p);
-        return config != null ? config.getString(path, path) : path;
+        String locale = (p != null && p.getLocale() != null) ? p.getLocale().split("_")[0].toLowerCase() : "tr";
+        FileConfiguration config = langCache.getOrDefault(locale, langCache.get("tr"));
+        
+        if (config == null || !config.contains(path)) return path; // Key bulunamazsa path döner
+        return config.getString(path);
     }
 
     public void sendMessage(Player p, String path, Map<String, String> placeholders) {
         String prefix = getRaw(p, "messages.prefix");
         String msg = getRaw(p, path);
-        
-        String fullMsg = prefix + msg;
-        
+        String full = prefix + msg;
         if (placeholders != null) {
-            for (Map.Entry<String, String> e : placeholders.entrySet()) {
-                fullMsg = fullMsg.replace(e.getKey(), e.getValue());
-            }
+            for (Map.Entry<String, String> e : placeholders.entrySet()) full = full.replace(e.getKey(), e.getValue());
         }
-        plugin.getAdventure().player(p).sendMessage(MessageUtils.parse(p, fullMsg));
+        plugin.getAdventure().player(p).sendMessage(MessageUtils.parse(p, full));
     }
 }
