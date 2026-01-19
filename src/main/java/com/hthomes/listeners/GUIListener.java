@@ -2,7 +2,7 @@ package com.hthomes.listeners;
 
 import com.hthomes.HTHomes;
 import com.hthomes.managers.GUIManager;
-import com.hthomes.managers.TeleportManager; // IMPORT EKLENDİ
+import com.hthomes.managers.TeleportManager;
 import com.hthomes.utils.MessageUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -20,45 +20,48 @@ public class GUIListener implements Listener {
         if (e.getClickedInventory() == null || e.getCurrentItem() == null) return;
         Player p = (Player) e.getWhoClicked();
         String title = e.getView().getTitle();
-        if (!e.getCurrentItem().hasItemMeta()) return;
-
         Material mat = e.getCurrentItem().getType();
         String itemName = e.getCurrentItem().getItemMeta().getDisplayName();
         String cleanItemName = ChatColor.stripColor(itemName);
 
-        String guiTitle = MessageUtils.color(plugin.getLangManager().getRaw(p, "gui.title"));
-        
-        if (title.equals(guiTitle)) {
+        // ANA LİSTE
+        if (title.equals(MessageUtils.color(plugin.getLangManager().getRaw(p, "gui.title")))) {
             e.setCancelled(true);
             if (mat == Material.RED_BED) {
                 plugin.getHomeManager().setHome(p.getUniqueId(), cleanItemName, p.getLocation());
                 p.closeInventory();
                 plugin.getLangManager().sendMessage(p, "messages.home-set", java.util.Map.of("{home}", cleanItemName));
-            } else if (mat == Material.LIME_BED) {
+            } else if (mat != Material.GRAY_STAINED_GLASS_PANE) {
                 GUIManager.openSelection(p, cleanItemName);
             }
         } 
+        // SEÇİM MENÜSÜ
         else if (title.contains(MessageUtils.color(plugin.getLangManager().getRaw(p, "selection-menu.title").split("\\{")[0]))) {
             e.setCancelled(true);
-            String homeName = ChatColor.stripColor(title.substring(title.lastIndexOf(" ") + 1));
-            
-            String tpBtn = MessageUtils.color(plugin.getLangManager().getRaw(p, "selection-menu.teleport-name"));
-            String delBtn = MessageUtils.color(plugin.getLangManager().getRaw(p, "selection-menu.delete-name"));
-
-            if (itemName.equals(tpBtn)) {
+            String homeName = ChatColor.stripColor(title.split(": ")[1]);
+            if (mat == Material.ENDER_PEARL) {
                 p.closeInventory();
                 TeleportManager.teleportWithCountdown(p, plugin.getHomeManager().getHome(p.getUniqueId(), homeName));
-            } else if (itemName.equals(delBtn)) {
+            } else if (mat == Material.PAINTING) {
+                GUIManager.openIconMenu(p, homeName);
+            } else if (mat == Material.BARRIER) {
                 GUIManager.openConfirmDelete(p, homeName);
             }
         }
+        // İKON MENÜSÜ
+        else if (title.contains(MessageUtils.color(plugin.getLangManager().getRaw(p, "icon-menu.title").split("\\{")[0]))) {
+            e.setCancelled(true);
+            String homeName = ChatColor.stripColor(title.split(": ")[1]);
+            plugin.getHomeManager().setIcon(p.getUniqueId(), homeName, mat);
+            p.closeInventory();
+            plugin.getLangManager().sendMessage(p, "messages.icon-changed", null);
+            GUIManager.openHomeList(p);
+        }
+        // SİLME ONAYI
         else if (title.contains(MessageUtils.color(plugin.getLangManager().getRaw(p, "confirm-gui.title").split("\\{")[0]))) {
             e.setCancelled(true);
-            String homeName = ChatColor.stripColor(title.substring(title.lastIndexOf(" ") + 1));
-            
-            String yesBtn = MessageUtils.color(plugin.getLangManager().getRaw(p, "confirm-gui.yes-name"));
-
-            if (itemName.equals(yesBtn)) {
+            String homeName = ChatColor.stripColor(title.split(": ")[1]);
+            if (mat == Material.LIME_STAINED_GLASS_PANE) {
                 plugin.getHomeManager().deleteHome(p.getUniqueId(), homeName);
                 p.closeInventory();
                 plugin.getLangManager().sendMessage(p, "messages.home-deleted", java.util.Map.of("{home}", homeName));
