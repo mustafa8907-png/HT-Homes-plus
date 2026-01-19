@@ -2,7 +2,7 @@ package com.hthomes.commands;
 
 import com.hthomes.HTHomes;
 import com.hthomes.managers.GUIManager;
-import com.hthomes.managers.TeleportManager;
+import com.hthomes.managers.TeleportManager; // IMPORT EKLENDİ
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -40,6 +40,5 @@ public class HomeCommand implements CommandExecutor {
 
         GUIManager.openHomeList(p);
         return true;
- 
     }
 }
