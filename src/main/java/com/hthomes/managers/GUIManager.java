@@ -9,6 +9,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import java.util.Collections;
+import java.util.List;
 
 public class GUIManager {
     private static HTHomes plugin;
@@ -18,17 +19,15 @@ public class GUIManager {
         String title = plugin.getLangManager().getRaw(p, "gui.title");
         Inventory inv = Bukkit.createInventory(null, 27, MessageUtils.color(title));
         
-        String clickTeleport = plugin.getLangManager().getRaw(p, "gui.click-teleport");
-        String clickCreate = plugin.getLangManager().getRaw(p, "gui.click-create");
+        for (int i = 0; i < 27; i++) inv.setItem(i, createItem(Material.GRAY_STAINED_GLASS_PANE, " ", ""));
 
-        for (int i = 10; i <= 16; i++) {
-            String homeName = "Ev-" + (i - 9);
-            if (plugin.getHomeManager().exists(p.getUniqueId(), homeName)) {
-                // &a yerine <green> kullanarak MiniMessage hatasını önledik
-                inv.setItem(i, createItem(Material.LIME_BED, "<green>" + homeName, clickTeleport));
+        for (int i = 1; i <= 7; i++) {
+            String name = "Ev-" + i;
+            if (plugin.getHomeManager().exists(p.getUniqueId(), name)) {
+                Material icon = plugin.getHomeManager().getIcon(p.getUniqueId(), name);
+                inv.setItem(9+i, createItem(icon, "<green>" + name, plugin.getLangManager().getRaw(p, "gui.click-teleport")));
             } else {
-                // &c yerine <red> kullanarak MiniMessage hatasını önledik
-                inv.setItem(i, createItem(Material.RED_BED, "<red>" + homeName, clickCreate));
+                inv.setItem(9+i, createItem(Material.RED_BED, "<red>" + name, plugin.getLangManager().getRaw(p, "gui.click-create")));
             }
         }
         p.openInventory(inv);
@@ -38,20 +37,27 @@ public class GUIManager {
         String title = plugin.getLangManager().getRaw(p, "selection-menu.title").replace("{home}", homeName);
         Inventory inv = Bukkit.createInventory(null, 27, MessageUtils.color(title));
         
-        String teleportName = plugin.getLangManager().getRaw(p, "selection-menu.teleport-name");
-        String deleteName = plugin.getLangManager().getRaw(p, "selection-menu.delete-name");
+        inv.setItem(10, createItem(Material.ENDER_PEARL, plugin.getLangManager().getRaw(p, "selection-menu.teleport-name"), ""));
+        inv.setItem(13, createItem(Material.PAINTING, plugin.getLangManager().getRaw(p, "selection-menu.change-icon-name"), ""));
+        inv.setItem(16, createItem(Material.BARRIER, plugin.getLangManager().getRaw(p, "selection-menu.delete-name"), ""));
+        p.openInventory(inv);
+    }
 
-        inv.setItem(11, createItem(Material.ENDER_PEARL, teleportName, ""));
-        inv.setItem(15, createItem(Material.BARRIER, deleteName, ""));
+    public static void openIconMenu(Player p, String homeName) {
+        String title = plugin.getLangManager().getRaw(p, "icon-menu.title").replace("{home}", homeName);
+        Inventory inv = Bukkit.createInventory(null, 36, MessageUtils.color(title));
+        
+        Material[] icons = {Material.GRASS_BLOCK, Material.DIAMOND, Material.GOLD_INGOT, Material.IRON_SWORD, Material.BOOK, Material.LANTERN, Material.CAMPFIRE, Material.CRAFTING_TABLE, Material.CHEST};
+        for (Material m : icons) inv.addItem(createItem(m, "<yellow>" + m.name(), ""));
+        
         p.openInventory(inv);
     }
 
     public static void openConfirmDelete(Player p, String homeName) {
         String title = plugin.getLangManager().getRaw(p, "confirm-gui.title").replace("{home}", homeName);
         Inventory inv = Bukkit.createInventory(null, 27, MessageUtils.color(title));
-        
-        inv.setItem(11, createItem(Material.LIME_STAINED_GLASS_PANE, "<green>Onayla", ""));
-        inv.setItem(15, createItem(Material.RED_STAINED_GLASS_PANE, "<red>Vazgeç", ""));
+        inv.setItem(11, createItem(Material.LIME_STAINED_GLASS_PANE, plugin.getLangManager().getRaw(p, "confirm-gui.yes-name"), ""));
+        inv.setItem(15, createItem(Material.RED_STAINED_GLASS_PANE, plugin.getLangManager().getRaw(p, "confirm-gui.no-name"), ""));
         p.openInventory(inv);
     }
 
