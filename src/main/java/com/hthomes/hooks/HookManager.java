@@ -1,25 +1,31 @@
 package com.hthomes.hooks;
 
 import com.hthomes.HTHomes;
-import me.ryanhamshire.GriefPrevention.GriefPrevention;
+import me.ryanhamshire.GriefPrevention.GriefPrevention; // Doğru import
+import me.ryanhamshire.GriefPrevention.Claim;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public class HookManager {
     private final HTHomes plugin;
-    private boolean gp = false;
+    private boolean gpEnabled = false;
 
     public HookManager(HTHomes plugin) {
         this.plugin = plugin;
-        if (Bukkit.getPluginManager().isPluginEnabled("GriefPrevention")) gp = true;
+        if (Bukkit.getPluginManager().isPluginEnabled("GriefPrevention")) {
+            gpEnabled = true;
+        }
     }
 
     public boolean canBuild(Player p, Location loc) {
-        if (!gp || !plugin.getConfig().getBoolean("hooks.grief-prevention")) return true;
-        try {
-            var claim = GriefPrevention.instance.dataStore.getClaimAt(loc, false, null);
-            return claim == null || claim.allowAccess(p) == null;
-        } catch (NoClassDefFoundError e) { return true; }
+        if (!gpEnabled) return true;
+        
+        // GriefPrevention.instance kullanımı sınıf üzerinden olmalı
+        Claim claim = GriefPrevention.instance.dataStore.getClaimAt(loc, false, null);
+        if (claim != null) {
+            return claim.allowAccess(p) == null; // null ise izin var demektir
+        }
+        return true;
     }
 }
