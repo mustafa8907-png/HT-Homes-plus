@@ -17,24 +17,24 @@ public class HTHomes extends JavaPlugin {
         instance = this;
         saveDefaultConfig();
         
-        // Adventure kütüphanesi başlatılıyor
+        // Adventure API başlatma
         this.adventure = BukkitAudiences.create(this);
         
-        // Yöneticiler başlatılıyor
+        // Manager sınıflarını yükleme
         this.languageManager = new LanguageManager(this);
         this.homeManager = new HomeManager(this);
         
-        // GUI Manager'a plugin instance veriliyor
+        // Statik erişim için plugin instance gönderme
         GUIManager.setPlugin(this);
 
-        // Komutlar kaydediliyor
+        // Komutları kaydetme
         HomeCommand cmd = new HomeCommand(this);
         getCommand("home").setExecutor(cmd);
         getCommand("homes").setExecutor(cmd);
         getCommand("sethome").setExecutor(cmd);
         getCommand("delhome").setExecutor(cmd);
         
-        // Event Listener kaydediliyor
+        // Event listener kaydetme
         getServer().getPluginManager().registerEvents(new GUIListener(this), this);
     }
 
@@ -46,10 +46,10 @@ public class HTHomes extends JavaPlugin {
         }
     }
 
+    // Getter Metotları
     public static HTHomes getInstance() { return instance; }
     public BukkitAudiences getAdventure() { return adventure; }
     public LanguageManager getLangManager() { return languageManager; }
     public HomeManager getHomeManager() { return homeManager; }
-} 
-// HATA BURADAYDI: Buradaki } parantezi eksikti, şimdi ekl
-    endi.
+}
+
