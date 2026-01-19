@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,4 +58,4 @@ public class HomeManager {
 
     public void save() { try { config.save(file); } catch (IOException ignored
                                                           ) {} }
-            }
+}
