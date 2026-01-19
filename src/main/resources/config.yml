@@ -1,53 +1,30 @@
 # ==========================================================
-#                  HT-Homes+ Configuration
-#              Developed by mustata8907
+#                🏠 HT-Homes+ Configuration
+#           Developed with ❤️ by Mustafa8907
 # ==========================================================
 
-# The language file to be used (from the languages/ folder)
-# Available options: tr, en, de, fr, es, ru, ko, ja, etc.
-language: "tr"
-
-# --- Teleportation Settings ---
-teleport:
-  # Delay before teleportation (in seconds)
-  delay: 3
-  # Show the countdown on the Action Bar (above the hotbar)
-  use-action-bar: true
-  # Cancel teleportation if the player moves
-  cancel-on-move: true
-
-# --- Protection & Hook Settings ---
-# These features will auto-disable if WorldGuard or GriefPrevention is not installed.
-hooks:
-  # Prevent players from setting homes inside someone else's claim or protected region
-  prevent-sethome-in-claims: true
-  
-  # Prevent teleportation if the player no longer has build access at the home location
-  # (Useful for preventing unauthorized access to expired claims or admin zones)
-  prevent-teleport-to-unsafe: true
-
-# --- GUI (Menu) Icon Settings ---
-# Use official Minecraft Material names (e.g., RED_BED, ENDER_PEARL)
-selection-menu:
-  # Icon for the teleport button
-  teleport-icon: "ENDER_PEARL"
-  # Icon for the delete button
-  delete-icon: "SKELETON_SKULL"
-  # Icon for the change icon button
-  change-icon: "PAINTING"
-  # Icon for the back/close button
-  back-icon: "BARRIER"
-
-# --- Advanced GUI Settings ---
-gui:
-  # Item used to fill empty slots in the menu
-  filler-item: "GRAY_STAINED_GLASS_PANE"
-  # Default icon for new homes
-  default-home-icon: "LIME_BED"
-
-# --- Plugin Integration ---
-# Enable/Disable PlaceholderAPI support
+language: "en"
+teleport-delay: 3
 use-placeholder-api: true
 
-# Enable/Disable colored text in console logs
-console-colors: true
+# LuckPerms Limitleri (hthomes.limit.<grup>)
+home-limits:
+  default: 3
+  vip: 7
+  mvp: 12
+  admin: 50
+
+# Eklenti Entegrasyonları (Yüklü değilse otomatik kapanır)
+hooks:
+  grief-prevention: true
+  world-guard: true
+  luck-perms: true
+
+# GUI Materyalleri
+icons:
+  empty-slot: "RED_BED"
+  saved-home: "LIME_BED"
+  teleport: "ENDER_PEARL"
+  delete: "SKELETON_SKULL"
+  back: "BARRIER"
+  filler: "GRAY_STAINED_GLASS_PANE"
